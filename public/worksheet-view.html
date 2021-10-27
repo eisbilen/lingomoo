@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Lingomoo - Customized learning materials for English Learners</title>
+  <meta content="What do you want to study today? Lingomoo curates fresh English learning materials everyday for you."
+    name="descriptions">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="../assets/img/favicon.svg" rel="icon">
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Dosis:300,400,500,,600,700,700i|Lato:300,300i,400,400i,700,700i"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"  crossorigin="anonymous">
+
+
+  <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="../assets/css/style.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+</head>
+
+
+
+<body>
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center">
+
+      <a href="index.html" class="logo mr-auto"><img src="assets/img/lingomoo.svg" alt="" class="img-fluid"></a>
+
+      <button type="button" id="print-button" class="btn btn-primary mr-1" data-toggle="modal" data-target="#staticBackdrop">
+        Save Your Worksheet <span id="ws-question-count" class="badge badge-light">0</span>
+        <span class="sr-only">unread messages</span>
+      </button>
+
+      <img id="profile_image" src="/img/user-circle-solid.svg" class="rounded-circle" alt="" width="40" height="40" />
+
+      <!-- Uncomment below if you prefer to use text as a logo -->
+      <!-- <h1 class="logo mr-auto"><a href="index.html">Butterfly</a></h1> -->
+    </div>
+  </header><!-- End Header -->
+
+  <section id="today" class="about mt-5">
+    <div class="container">
+      <div class="row mt-5">
+        <div class="col">
+          <img src="assets/img/img2.png" class="img-fluid" alt="">
+        </div>
+
+        <div class="col">
+          <h2 class="lingoo-title font-weight-bold text-center my-5">Save your worksheets</h2>
+          <h5 class="lingoo-body font-weight-light text-center my-5">Explore interactive worksheets on Lingomoo. Learn
+            what you need to get good results in your language classes and improve your fluency. Memorise important
+            terms, definitions, vocabulary, conjugations and grammar rules.
+          </h5>
+        </div>
+
+      </div>
+    </div>
+
+
+  </section>
+  
+  <section class="about">
+    <div class="container">
+
+      <div class="row">
+        <div class="alert alert-warning myalert fade in text-center col my-4" id="min-alert">
+          Minimum 1 question is required!
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="alert alert-success myalert fade in text-center col my-4" id="success-remove-alert">
+          Question is removed successfully :)
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <div id="card-cont" class="card-columns mt-5"></div>
+      </div>
+
+
+    </div>
+
+  </section><!-- End About Section -->
+  </main><!-- End #main -->
+
+
+<!-- Modal HTML Markup -->
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h1 class="modal-title">Save your worksheet</h1>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+
+          </div>
+          <div class="modal-body">
+              <form role="form" method="POST" class="needs-validation" novalidate action="">
+                  <div class="form-group">
+                      <label class="control-label">Worksheet name</label>
+                      <div>
+                          <input id= "WSname" type="text" class="form-control input-lg" name="worksheetname" value="" maxlength="25">
+                          <div id = "invalidWS" class="warningtext d-none">
+                            * Please choose a workseet name
+                          </div>
+                      </div>
+                  </div>
+
+                  <section>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Part of Speech" checked>
+                    <label class="form-check-label" for="inlineRadio1">Part of Speech</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="Verb Tenses">
+                    <label class="form-check-label" for="inlineRadio2">Verb Tenses</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="Vocabulary">
+                    <label class="form-check-label" for="inlineRadio3">Vocabulary</label>
+                  </div>
+                  <div id="input1" class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Part of Speech</button>
+                      <div id = "dd1" class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Verbs</a>
+                        <a class="dropdown-item" href="#">Advers</a>
+                        <a class="dropdown-item" href="#">Adjectives</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Prepositions</a>
+                        <a class="dropdown-item" href="#">Determiners</a>
+                        <a class="dropdown-item" href="#">Conjuctions</a>
+                      </div>
+                    </div>
+                    <input id = "input1TXT" type="text" class="form-control" aria-label="Text input with dropdown button" maxlength="15">
+
+                  </div>
+                  <div id="input2" class="input-group mb-3 d-none">
+                    <div class="input-group-prepend">
+                      <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Verb Tenses</button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Simple Present</a>
+                        <a class="dropdown-item" href="#">Simple Past</a>
+                        <a class="dropdown-item" href="#">Simple Feature</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Present Continuous</a>
+                        <a class="dropdown-item" href="#">Past Continuous</a>
+                        <a class="dropdown-item" href="#">Feature Continuous</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Present Perfect</a>
+                        <a class="dropdown-item" href="#">Past Perfect</a>
+                        <a class="dropdown-item" href="#">Feature Perfect</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Present Perfect Continuous</a>
+                        <a class="dropdown-item" href="#">Past Perfect Continuous</a>
+                        <a class="dropdown-item" href="#">Feature Perfect Continuous</a>
+                      </div>
+                    </div>
+                    <input id = "input2TXT" type="text" class="form-control" aria-label="Text input with dropdown button" maxlength="15">
+                  </div>
+                  <div id="input3" class="input-group mb-3 d-none">
+                    <div class="input-group-prepend">
+                      <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Vocabulary</button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Arts and Science</a>
+                        <a class="dropdown-item" href="#">Sports</a>
+                        <a class="dropdown-item" href="#">Life</a>
+                        <a class="dropdown-item" href="#">Business</a>
+                        <a class="dropdown-item" href="#">Politics</a>
+                        <a class="dropdown-item" href="#">Technology</a>
+                      </div>
+                    </div>
+                    <input id = "input3TXT" type="text" class="form-control" aria-label="Text input with dropdown button" maxlength="15">
+                  </div>
+                  <div id = "invalidTag" class="warningtext d-none">
+                    * Please choose a workseet name
+                  </div>
+
+                </section>
+
+                <div>
+                  <button id="WSSaveButton" type="submit" class="btn btn-success">Save</button>
+              </div>
+
+           
+              </form>
+          </div>
+      </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+  <a href="#" class="back-to-top"><i class="bx bx-chevron-up-circle"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/jquery/jquery.min.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-storage.js"></script>
+
+  <!-- lingomoo Related JavaScript -->
+  <script type="text/javascript" src="/js/database-connection.js"></script>
+  <script type="text/javascript" src="/js/login.js"></script>
+
+  <script type="text/javascript" src="/js/database_utility.js"></script>
+  <script type="text/javascript" src="/js/cursor.js"></script>
+  <script type="text/javascript" src="/js/worksheet-view.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+</html>

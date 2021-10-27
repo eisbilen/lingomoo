@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Lingomoo - Customized learning materials for English Learners</title>
+  <meta content="What do you want to study today? Lingomoo curates fresh English learning materials everyday for you."
+    name="descriptions" />
+  <meta content="" name="keywords" />
+
+  <!-- Favicons -->
+  <link href="../assets/img/favicon.svg" rel="icon" />
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Dosis:300,400,500,,600,700,700i|Lato:300,300i,400,400i,700,700i"
+    rel="stylesheet" />
+
+  <!-- Vendor CSS Files -->
+  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet" />
+
+  <!-- Template Main CSS File -->
+  <link href="../assets/css/style.css" rel="stylesheet" />
+  <script type="module" src="assets/js/lingomoo-main-filter.js"></script>
+  <script type="module" src="assets/js/lingomoo-worksheets.js"></script>
+  <script type="module" src="assets/js/lingomoo-footer.js"></script>
+
+  <link rel="stylesheet" type="text/css"
+    href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/fonts/simple-line-icons/style.min.css">
+
+  <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet">
+
+
+
+</head>
+
+<body>
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top">
+    <div class="m-2 d-flex align-items-center">
+      <div class="mr-auto">
+      <a href="index.html" class="logo mx-1"><img src="assets/img/lingomoo.svg" alt="" class="img-fluid" /></a>
+      <a href="../worksheet-view.html" class="btn btn-info btn-sm mx-1">Explore</a>
+      <a href="../study.html" class="btn btn-info btn-sm mx-1">Study</a>
+      <a href="../worksheet.html" class="btn btn-info btn-sm mx-1">Create Worksheets</a>
+      <a href="../worksheet-view.html" class="btn btn-info btn-sm mx-1">Your Library</a>
+    </div>
+      <img id="profile_image" src="/img/user-circle-solid.svg" class="mr-3 rounded-circle" alt="" width="40"
+        height="40" />
+
+      <!-- Uncomment below if you prefer to use text as a logo -->
+      <!-- <h1 class="logo mr-auto"><a href="index.html">Butterfly</a></h1> -->
+    </div>
+  </header>
+  <!-- End Header -->
+
+  <section id="today" class="about mt-5">
+    <div class="container">
+      <div class="row mt-5">
+        <div class="col">
+          <img src="assets/img/img1.png" class="img-fluid" alt="">
+        </div>
+
+        <div class="col">
+          <h2 class="lingoo-title font-weight-bold text-center my-5">Interactive worksheets</h2>
+          <h5 class="lingoo-body font-weight-light text-center my-5">Explore interactive worksheets on Lingomoo. Learn
+            what you need to get good results in your language classes and improve your fluency. Memorise important
+            terms, definitions, vocabulary, conjugations and grammar rules.
+          </h5>
+        </div>
+
+      </div>
+    </div>
+
+
+  </section>
+
+
+  <section>
+    <div class="container my-5">
+      <h2 class="lingoo-title font-weight-bold text-center">Latest worksheets created by others</h2>
+    </div>
+    <div class="container">
+      <div id="into" class="row">
+      </div>
+    </div>
+  </section>
+
+
+  <section id="question-pane">
+    <div class="container my-5">
+      <h2 class="lingoo-title font-weight-bold text-center">Study worksheets</h2>
+    </div>
+
+    <div class="container mt-5">
+
+      <div class="progress m-5" style="max-width: 100%">
+        <div id="Pcorrect" class="progress-bar bg-success progress-bar-stripped" style="width: 0%"></div>
+        <div id="Pwrong" class="progress-bar bg-danger progress-bar-stripped" style="width: 0%"></div>
+      </div>
+
+    </div>
+
+
+    <div class="container d-flex align-items-center">
+      <h3 id="study_label" class="mr-auto text-left lingoo-body font-weight-light"></h3>
+      <a href="" class="" id="addToLibrary"><i class='bx bx-add-to-queue bx-rotate-270 bx-md'></i></a>
+
+    </div>
+
+    <div class="container">
+      <div class="card-cont">
+        <div class="row mt-2">
+
+        </div>
+
+        <div class="row">
+          <div id="card-cont" class="card-columns"></div>
+        </div>
+
+        <div class="row mt-4 d-none">
+          <div class="col text-center">
+            <h4 id="index-text"></h4>
+          </div>
+        </div>
+
+        <div class="row d-none">
+          <div class="col-6 text-center">
+            <a id="previous-button" class="btn btn-primary" href="#" role="button">Previous</a>
+          </div>
+          <div class="col-6 text-center">
+            <a id="next-button" class="btn btn-primary" href="#" role="button">Next</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <!-- End About Section -->
+  <section>
+    <lingomoo-footer></lingomoo-footer>
+  </section>
+  <a href="#" class="back-to-top"><i class="bx bx-chevron-up-circle"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/jquery/jquery.min.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-storage.js"></script>
+
+  <!-- lingomoo Related JavaScript -->
+  <script type="text/javascript" src="/js/database-connection.js"></script>
+  <script type="text/javascript" src="/js/login.js"></script>
+  <script type="text/javascript" src="js/cursor.js"></script>
+  <script type="text/javascript" src="js/database_utility.js"></script>
+  <script type="text/javascript" src="/js/search.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+</body>
+
+</html>

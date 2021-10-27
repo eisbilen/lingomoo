@@ -1,0 +1,70 @@
+$height:35;
+$depth:3;
+$color:#49bfff;
+$text-color:darken($color,90%);
+$lighten-on-hover:7%;
+$button-speed:.06;
+$timing-function: ease-out;
+
+.button {
+  cursor:pointer;
+  margin-left:5px;
+  margin-bottom:15px;
+  box-sizing:border-box;
+  font-size:1em;
+  font-family: Helvetica, Arial, Sans-Serif;
+  text-decoration:none;
+  font-weight:bold;
+  color:$text-color;
+  &:visited {
+    color:$text-color;
+  }
+  height:$height+px;
+  line-height:$height+px;
+  padding: 0 (($height/2)+px);
+  display:inline-block;
+  width:auto;
+  background: linear-gradient(to bottom,
+    saturate(lighten($color,15%),65%) 0%,
+    saturate(lighten($color,12%),45%) 26%,
+    $color 100%);
+  border-radius:10px;
+  border-top:1px solid lighten($color,22%);
+  border-bottom:1px solid lighten($color,20%);
+ top:0;
+  transition:all ($button-speed + s) $timing-function;
+  position:relative;
+}
+.button:hover {
+  background: linear-gradient(to bottom,
+    lighten(saturate(lighten($color,15%),35%),$lighten-on-hover) 0%,
+    lighten(saturate(lighten($color,12%),15%),$lighten-on-hover) 26%,
+    lighten($color,$lighten-on-hover) 100%);
+}
+.button:active {
+  top:$depth+px;
+
+  &:before {
+    top:0;
+    box-shadow: 0 1px 1px rgba(193, 227, 250, 0.7),0 3px 9px rgba(193, 227, 250, 0.2);
+
+  }
+}
+.button:before {
+  display:inline-block;
+  content:'';
+  position:absolute;
+  left:0;
+  right:0;
+  z-index:-1;
+  top:($depth)+px;
+  border-radius:10px;
+  height:($height)+px;
+  background: linear-gradient(to top,
+    saturate(darken($color,40%),15%) 0%,
+    saturate(darken($color,25%),10%) $depth+px);
+  transition:all (($button-speed*1.2) + s) $timing-function;
+
+    
+  
+}

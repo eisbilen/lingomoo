@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Lingomoo - Customized learning materials for English Learners</title>
+  <meta content="What do you want to study today? Lingomoo curates fresh English learning materials everyday for you."
+    name="descriptions">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="../assets/img/favicon.svg" rel="icon">
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Dosis:300,400,500,,600,700,700i|Lato:300,300i,400,400i,700,700i"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="../assets/css/style.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+  <script type="module" src="assets/js/lingomoo-main-filter.js"></script>
+
+</head>
+
+<body>
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center">
+
+      <a href="index.html" class="logo mr-auto"><img src="assets/img/lingomoo.svg" alt="" class="img-fluid"></a>
+
+
+      <a href="../worksheet-view.html" class="btn btn-primary mr-1">
+        View Your Worksheet <span id="ws-question-count" class="badge badge-light">0</span>
+        <span class="sr-only">unread messages</span>
+      </a>
+
+      <!-- Example single danger button -->
+      <div class="btn-group">
+        <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img id="profile_image" src="/img/user-circle-solid.svg" class="rounded-circle" alt="" width="40"
+            height="40" />
+        </a>
+        <div class="dropdown-menu dropdown-menu-right">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+          <div class="dropdown-divider"></div>
+          <a id="logout" class="dropdown-item" href="#">Logout</a>
+        </div>
+      </div>
+
+
+
+      <!-- Uncomment below if you prefer to use text as a logo -->
+      <!-- <h1 class="logo mr-auto"><a href="index.html">Butterfly</a></h1> -->
+
+    </div>
+  </header><!-- End Header -->
+
+  <section id="today" class="about mt-5">
+    <div class="container mt-5">
+      <lingomoo-main-filter></lingomoo-main-filter>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="row">
+        <h2 class="mb-3">Filter content by keywords</h2>
+        <p></p>
+        <p></p>
+        <div class="container border rounded mb-3">
+          <div id="pre-list" class="scrolling-wrapper"></div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="alert alert-warning myalert fade in text-center col my-4" id="max-alert">
+        Maximum 24 question is allowed!
+      </div>
+    </div>
+    <div class="row">
+      <div class="alert alert-success myalert fade in text-center col my-4" id="success-alert">
+        Question added successfuly :)
+      </div>
+    </div>
+    <div class="row">
+      <div class="alert alert-danger myalert fade in text-center col my-4" id="danger-alert">
+        Error while adding question, try again later :(
+      </div>
+    </div>
+    </div>
+
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="row mt-4">
+        <h5 id="study_label" class="text-center"></h5>
+      </div>
+
+      <div class="row">
+        <div id="card-cont" class="card-columns"></div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col text-center">
+          <h4 id="index-text"></h4>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6 text-center">
+          <a id="previous-button" class="btn btn-primary" href="#" role="button">Previous</a>
+        </div>
+
+        <div class="col-6 text-center">
+          <a id="next-button" class="btn btn-primary" href="#" role="button">Next</a>
+        </div>
+      </div>
+
+    </div>
+
+  </section><!-- End About Section -->
+  </main><!-- End #main -->
+
+  <a href="#" class="back-to-top"><i class="bx bx-chevron-up-circle"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/jquery/jquery.min.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-storage.js"></script>
+
+  <!-- lingomoo Related JavaScript -->
+  <script type="text/javascript" src="/js/database-connection.js"></script>
+  <script type="text/javascript" src="/js/login.js"></script>
+
+  <script type="text/javascript" src="/js/database_utility.js"></script>
+  <script type="text/javascript" src="/js/cursor.js"></script>
+  <script type="text/javascript" src="/js/worksheet.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+
+</body>
+
+</html>

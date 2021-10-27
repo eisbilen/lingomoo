@@ -1,0 +1,61 @@
+.button {
+  cursor: pointer;
+  margin-left: 5px;
+  margin-bottom: 15px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-size: 1em;
+  font-family: Helvetica, Arial, Sans-Serif;
+  text-decoration: none;
+  font-weight: bold;
+  color: black;
+  height: 35px;
+  line-height: 35px;
+  padding: 0 17.5px;
+  display: inline-block;
+  width: auto;
+  background: -webkit-gradient(linear, left top, left bottom, from(#96daff), color-stop(26%, #86d5ff), to(#49bfff));
+  background: linear-gradient(to bottom, #96daff 0%, #86d5ff 26%, #49bfff 100%);
+  border-radius: 10px;
+  border-top: 1px solid #b9e6ff;
+  border-bottom: 1px solid #afe3ff;
+  top: 0;
+  -webkit-transition: all 0.06s ease-out;
+  transition: all 0.06s ease-out;
+  position: relative;
+}
+
+.button:visited {
+  color: black;
+}
+
+.button:hover {
+  background: -webkit-gradient(linear, left top, left bottom, from(#b9e6ff), color-stop(26%, #aae1ff), to(#6dccff));
+  background: linear-gradient(to bottom, #b9e6ff 0%, #aae1ff 26%, #6dccff 100%);
+}
+
+.button:active {
+  top: 3px;
+}
+
+.button:active:before {
+  top: 0;
+  -webkit-box-shadow: 0 1px 1px rgba(193, 227, 250, 0.7), 0 3px 9px rgba(193, 227, 250, 0.2);
+          box-shadow: 0 1px 1px rgba(193, 227, 250, 0.7), 0 3px 9px rgba(193, 227, 250, 0.2);
+}
+
+.button:before {
+  display: inline-block;
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  top: 3px;
+  border-radius: 10px;
+  height: 35px;
+  background: linear-gradient(to top, #00507c 0%, #0082c9 3px);
+  -webkit-transition: all 0.072s ease-out;
+  transition: all 0.072s ease-out;
+}
+/*# sourceMappingURL=button.css.map */
