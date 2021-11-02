@@ -2,40 +2,33 @@
 <html lang="en">
 
 <head>
+  <title>Lingomoo - Customized learning materials for English Learners</title>
+
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>Lingomoo - Customized learning materials for English Learners</title>
-  <meta content="What do you want to study today? Lingomoo curates fresh English learning materials everyday for you."
-    name="descriptions" />
+  <meta content="What do you want to study today? Lingomoo curates fresh English learning materials everyday for you." name="descriptions" />
   <meta content="" name="keywords" />
 
   <!-- Favicons -->
   <link href="../assets/img/favicon.svg" rel="icon" />
 
   <!-- Google Fonts -->
-  <link
-    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Dosis:300,400,500,,600,700,700i|Lato:300,300i,400,400i,700,700i"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Dosis:300,400,500,,600,700,700i|Lato:300,300i,400,400i,700,700i" rel="stylesheet" />
 
   <!-- Vendor CSS Files -->
   <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
   <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet" />
+  <link href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/fonts/simple-line-icons/style.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
   <link href="../assets/css/style.css" rel="stylesheet" />
+  
+  <!-- Web Components JS Files -->
   <script type="module" src="assets/js/lingomoo-main-filter.js"></script>
   <script type="module" src="assets/js/lingomoo-worksheets.js"></script>
   <script type="module" src="assets/js/lingomoo-footer.js"></script>
-
-  <link rel="stylesheet" type="text/css"
-    href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/fonts/simple-line-icons/style.min.css">
-
-  <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
-
-  <link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet">
-
-
-
 </head>
 
 <body>
@@ -43,20 +36,17 @@
   <header id="header" class="fixed-top">
     <div class="m-2 d-flex align-items-center">
       <div class="mr-auto">
-      <a href="index.html" class="logo mx-1"><img src="assets/img/lingomoo.svg" alt="" class="img-fluid" /></a>
-      <a href="../worksheet-view.html" class="btn btn-info btn-sm mx-1">Explore</a>
-      <a href="../study.html" class="btn btn-info btn-sm mx-1">Study</a>
-      <a href="../worksheet.html" class="btn btn-info btn-sm mx-1">Create Worksheets</a>
-      <a href="../worksheet-view.html" class="btn btn-info btn-sm mx-1">Your Library</a>
-    </div>
-      <img id="profile_image" src="/img/user-circle-solid.svg" class="mr-3 rounded-circle" alt="" width="40"
-        height="40" />
-
-      <!-- Uncomment below if you prefer to use text as a logo -->
-      <!-- <h1 class="logo mr-auto"><a href="index.html">Butterfly</a></h1> -->
+        <a href="index.html" class="logo mx-1"><img src="assets/img/lingomoo.svg" alt="" class="img-fluid" /></a>
+        <a href="../worksheet-view.html" class="btn btn-info btn-sm mx-1">Explore</a>
+        <a href="../study.html" class="btn btn-info btn-sm mx-1">Study</a>
+        <a href="../worksheet.html" class="btn btn-info btn-sm mx-1">Create Worksheets</a>
+        <a href="../worksheet-view.html" class="btn btn-info btn-sm mx-1">Your Library</a>
+      </div>
+      <img id="profile_image" src="/img/user-circle-solid.svg" class="mr-3 rounded-circle" alt="" width="40" height="40" />
     </div>
   </header>
   <!-- End Header -->
+  
 
   <section id="today" class="about mt-5">
     <div class="container">
@@ -79,7 +69,6 @@
 
   </section>
 
-
   <section>
     <div class="container my-5">
       <h2 class="lingoo-title font-weight-bold text-center">Latest worksheets created by others</h2>
@@ -90,26 +79,31 @@
     </div>
   </section>
 
-
   <section id="question-pane">
     <div class="container my-5">
       <h2 class="lingoo-title font-weight-bold text-center">Study worksheets</h2>
     </div>
 
-    <div class="container mt-5">
+    <div class="container d-flex align-items-center mt-5">
+      <h3 id="study_label" class="mr-auto text-left lingoo-statistics font-weight-light"></h3>
+      <h4 id="progress_label" class="mr-auto  text-center align-middle lingoo-statistics font-weight-light"><i class='bx bx-timer'></i> Your progress</h4>
+      <h3 id="tags_label" class="text-rigth align-middle lingoo-statistics font-weight-light"><i class='bx bx-purchase-tag-alt'></i> Tags </h3>
+    </div>
 
-      <div class="progress m-5" style="max-width: 100%">
+    <div class="container">
+      <div class="progress mb-5" style="max-width: 100%">
         <div id="Pcorrect" class="progress-bar bg-success progress-bar-stripped" style="width: 0%"></div>
         <div id="Pwrong" class="progress-bar bg-danger progress-bar-stripped" style="width: 0%"></div>
       </div>
-
     </div>
-
+    
 
     <div class="container d-flex align-items-center">
-      <h3 id="study_label" class="mr-auto text-left lingoo-body font-weight-light"></h3>
-      <a href="" class="" id="addToLibrary"><i class='bx bx-add-to-queue bx-rotate-270 bx-md'></i></a>
-
+      </i> <h4 id="ws_view" class="text-left align-middle px-1 lingoo-statistics font-weight-light"></i></h4>
+      <h4 id="ws_like" class="mr-auto text-left align-middle px-5 lingoo-statistics font-weight-light"><i class='bx bx-like'></i> 2 likes</h4>
+      <a href="#" role="button" class="btn btn-danger btn-sm mx-1" id="print" data-ref=""><i class='bx bx-printer' ></i> Print</a>
+      <a href="#" role="button" class="btn btn-danger btn-sm mx-1" id="share" data-ref=""><i class='bx bx-share-alt' ></i> Share</a>
+      <a href="#" role="button" class="btn btn-danger btn-sm mx-1" id="addToLibrary--" data-ref="" data-toggle="modal" data-target="#modalAddToLibrary"><i class='bx bx-book-add' ></i> Add to my library</a>
     </div>
 
     <div class="container">
@@ -140,10 +134,55 @@
       </div>
     </div>
   </section>
-  <!-- End About Section -->
+
   <section>
     <lingomoo-footer></lingomoo-footer>
   </section>
+
+
+  <div class="container">
+
+    <div class="row">
+      <div class="alert alert-warning myalert fade in text-center col my-4" id="addLibrary-alert">
+        Cannot add this worksheet into your library at the moment, please try later :(
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="alert alert-success myalert fade in text-center col my-4" id="addLibrary-success">
+        Worksheet is successfully saved into your library :)
+      </div>
+    </div>
+
+  </div>
+
+  
+
+  <!-- Modal HTML Markup -->
+<div class="modal fade" id="modalAddToLibrary" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header bg-info">
+              <h1 class="lingoo-modal-title">Save this worksheet to your library</h1>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <form role="form" method="POST" class="needs-validation" novalidate action="">
+                <section>
+                  <h3 class="lingoo-body font-weight-light" id="modal-wsname">Worksheet name</h3>
+                </section>
+                <div>
+                  <button id="librarySaveButton" type="submit" class="btn btn-primary">Add to my library</button>
+                </div>
+              </form>
+          </div>
+      </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
   <a href="#" class="back-to-top"><i class="bx bx-chevron-up-circle"></i></a>
 
   <!-- Vendor JS Files -->
@@ -167,6 +206,6 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
-</body>
 
+</body>
 </html>

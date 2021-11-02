@@ -1,6 +1,7 @@
 var uid;
 var dbref = firebase.database().ref("users/' + uid + '/worksheet").orderByKey();
 
+// this function 
 function login() {
     var provider = new firebase.auth.GoogleAuthProvider();
 
@@ -32,6 +33,8 @@ function login() {
     });
 }
 
+// adds selected question into the user worksheet folder
+// invoked by the button on the worksheet.html - question card
 function addQuestionToWS(url, file_name, correct_answer, count) {
     firebase.database().ref('users/' + uid + '/worksheet/' + file_name.replace(".jpg", "")).set({
         article_url: "",
@@ -53,12 +56,32 @@ function addQuestionToWS(url, file_name, correct_answer, count) {
     });
 }
 
+// removes one single question frim the user whorksheet folder
+// invoked by writeWS() function as it is needed to remove the question once it is stored as workssheet
 function removeSingleWSItem(file_name){
     firebase.database().ref('users/' + uid + '/worksheet/' + file_name.replace(".jpg", "")).remove().then(function () {
         console.log("Remove succeeded.")
         });
 }
 
+function writeIncreasedViewNumber(key, viewNumber) {
+    console.log('inside writte the statistics')
+    console.log(viewNumber)
+  
+    firebase.database().ref('worksheets-statistics/' + key).set({
+        view: viewNumber + 1
+    
+    }, function (error) {
+        if (error) {
+        } else {
+          $("#ws_view").html(( viewNumber + 1) + ' views ')  
+        }
+    });
+  }
+
+// removes one single selected question from the user worksheet folder
+// removed the question card as well in the worksheet-view.html
+// invoked in the worksheet-view.html with remove button on the question card
 function removeQuestionFromWS(thisCard, url, file_name, correct_answer, count) {
     firebase.database().ref('users/' + uid + '/worksheet/' + file_name.replace(".jpg", "")).remove().then(function () {
         console.log("Remove succeeded.")
@@ -77,9 +100,13 @@ function removeQuestionFromWS(thisCard, url, file_name, correct_answer, count) {
         });
 }
 
+// adds one single question data into the worksheets and worksheets_cat folder
+// worksheets_cat cathegorizes the wotksheets
+// worksheets folder contains all ws items with no cathegorization
+// invoked by writeWS() function
 function writeSingleWS(wsname, key, data, wsdatetime, tag1, tag2) {
 
-    firebase.database().ref("worksheets_cat/" + tag1 + "/" + tag2 + "/" +  wsdatetime + "__" + uid +  "___" + wsname + "!!" + count + "!!" + "/" + key).set({
+    firebase.database().ref("worksheets_cat/" + tag1 + "/" + tag2 + "/" +  wsdatetime + "__" + uid +  "___" + wsname + "!!" + count + "_!!" + tag1 + "::" + tag2 + "_" + "/" + key).set({
         article_url: data['article_url'],
         correct_answer: data['correct_answer'],
         file_name: data['file_name']
@@ -88,7 +115,24 @@ function writeSingleWS(wsname, key, data, wsdatetime, tag1, tag2) {
         } else {}
     });
 
-    firebase.database().ref("worksheets/" +  wsdatetime + "__" + uid + "___" + wsname + "!!" + count + "!!" + "/" + key).set({
+    firebase.database().ref("worksheets/" +  wsdatetime + "__" + uid + "___" + wsname + "!!" + count + "_!!" + tag1 + "::" + tag2 + "_"+ "/" + key).set({
+        article_url: data['article_url'],
+        correct_answer: data['correct_answer'],
+        file_name: data['file_name']
+    }, function (error) {
+        if (error) {
+        } else {}
+    });
+
+    // creates an emty node with zero values in the statistices node for new worksheet
+    writeIncreasedViewNumber( (wsdatetime + "__" + uid + "___" + wsname + "!!" + count + "_!!" + tag1 + "::" + tag2 + "_") , 0) 
+}
+
+// adds one single question data into the users/uid/my-library folder
+// invoked by writeToLibrary() function
+function writeSingleToLibrary(key_main, key, data) {
+
+    firebase.database().ref("users/" +  uid + "/my-library/" + key_main + "/" + key).set({
         article_url: data['article_url'],
         correct_answer: data['correct_answer'],
         file_name: data['file_name']
@@ -99,6 +143,12 @@ function writeSingleWS(wsname, key, data, wsdatetime, tag1, tag2) {
 
 }
 
+
+// main function for storing Ws data in firebase
+// loops all questions in users/id/worksheet node
+// and stores them in worksheets and worksheets_cat nodes
+// removes the questions in users/worksheet onces they are stored in worksheets node
+// invoked by the 'save worksheet' button on the worksheet-view.html
 async function writeWS(wsname, wsdatetime, tag1, tag2) {
 firebase.database().ref('users/' + uid + '/worksheet').once("value", snapshot => {
     if (snapshot.exists()) {
@@ -107,31 +157,48 @@ firebase.database().ref('users/' + uid + '/worksheet').once("value", snapshot =>
             removeSingleWSItem(ss.val()['file_name'])
         });
     } else {
-        console.log("NO Worksheet Questions Exists!");
+        libraryFailAlert()
         return 0;
     }
 });
 }
 
+function librarySuccessAlert(){
+    $("#addLibrary-success")
+    .fadeTo(3000, 50)
+    .slideUp(50, function () {
+      $("#addLibrary-success").slideUp(250);
+    });
+}
 
+function libraryFailAlert(){
+    $("#addLibrary-alert")
+    .fadeTo(3000, 50)
+    .slideUp(50, function () {
+      $("#addLibrary-alert").slideUp(250);
+    });
+}
+
+
+// main function for adding a WS item into user library
+// looks worksheets/key to access the specific WS item
+// then loops thoroug that WS item and copy all questions and the WS key into users/uis/my-library node
+// invoked by the 'add to my library' button on study.html
 async function writeToLibrary(key) {
     firebase.database().ref('worksheets/' + key).once("value", snapshot => {
         if (snapshot.exists()) {
             snapshot.forEach(ss => {
-                writeSingleWS(wsname, ss.key, ss.val(), wsdatetime, tag1, tag2)
-                removeSingleWSItem(ss.val()['file_name'])
+                writeSingleToLibrary(key, ss.key, ss.val())
             });
+            librarySuccessAlert()
         } else {
-            console.log("NO Worksheet Questions Exists!");
+            libraryFailAlert()
             return 0;
         }
     });
-    }
-
-
+}
 
 function getQuestionsInWS() {
-
     firebase.database().ref('users/' + uid + '/worksheet').once("value", snapshot => {
         if (snapshot.exists()) {
             const keys = [];
@@ -155,7 +222,6 @@ function getQuestionsInWS() {
 
             console.log("NO Worksheet Questions Exists!");
             return 0;
-
         }
     });
 }
@@ -224,7 +290,10 @@ $(document).ready(function () {
         }
     });
 
-    $("#adToLibrary").onclick = function () {}
-
+    $('#librarySaveButton').click (function (e) {
+        e.preventDefault(); 
+        writeToLibrary($(this).attr("data-ref"))
+        $('#modalAddToLibrary').modal('hide');
+      });
 
 });

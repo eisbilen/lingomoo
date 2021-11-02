@@ -8,7 +8,6 @@ let cardContainer;
 var filename_answer = " ";
 var count = 0;
 correct_answer_GLOBAL = 0;
-
 var WStotal = 0
 var WScorrect = 0
 var WSwrong = 0
@@ -26,6 +25,16 @@ function findWSname(text) {
   return text.match(myRe)[1];
 }
 
+function findWStag1(text) {
+  var myRe = "_!!(.+?)::";
+  return text.match(myRe)[1];
+}
+
+function findWStag2(text) {
+  var myRe = "::(.+?)_";
+  return text.match(myRe)[1];
+}
+
 function findWSdate(text) {
   var myRe = "(.+?)__";
   return text.match(myRe)[1];
@@ -37,13 +46,13 @@ function findWScreator(text) {
 }
 
 function findWSquestioncount(text) {
-  var myRe = "!!(.+?)!!";
+  var myRe = "!!(.+?)_!!";
   return text.match(myRe)[1];
 }
 
 // This function creates the cards
 // This function is called by queryDatabase function with data for every card
-let createTaskCard = (correct_answer, article_url, url, fl, qc) => {
+let createTaskCard = (correct_answer, article_url, url, fl) => {
 
 
   let card_flip = document.createElement("div");
@@ -129,7 +138,7 @@ let createTaskCard = (correct_answer, article_url, url, fl, qc) => {
   card_front.appendChild(button_group);
 
   let butt_link = document.createElement("a");
-  butt_link.innerText = qc;
+  butt_link.innerText = '';
   butt_link.className = "url btn btn-warning btn-sm bx bx-news";
   butt_link.id = "article_url" + count.toString();
 
@@ -312,16 +321,17 @@ $('#Pwrong').attr('style','width: '+ Wper + '%');
 
 $("#Pcorrect").html(Math.round((WScorrect/WStotal)*100) + "%")
 $("#Pwrong").html(Math.round((WSwrong/WStotal)*100) + "%")
+
+$("#progress_label").html("<i class='bx bx-trending-up' ></i>" + " " + (WScorrect + WSwrong) + " of " + WStotal + " is completed")  
+
 }
 
 
-let createWSCard = (WSname, WSdate, WScreator, key, QuestionCount) => {
-
+let createWSCard = (WSname, WSdate, WScreator, key, QuestionCount, tag1, tag2) => {
   console.log(WScreator)
   let div_01 = document.createElement("div");
   div_01.className = "col-6 mb-3";
-  
- 
+   
   let div_02 = document.createElement("div");
   div_02.className = "card ws p-3 mb-1";
 
@@ -400,9 +410,12 @@ let createWSCard = (WSname, WSdate, WScreator, key, QuestionCount) => {
 
   let div_12 = document.createElement("div");
   let a_add = document.createElement("a");
-  a_add.className = 'bx bxs-add-to-queue';
-  a_add.innerHTML = "Add to my library"
+  a_add.className = 'bx bx-purchase-tag-alt';
+ 
+  let span_05 = document.createElement("span");
+  span_05.className = "text2 text-muted pull-right";
 
+  span_05.innerHTML = " " + tag1 + " - " + tag2
 
   let span_02 = document.createElement("span");
   span_02.className = "text1 text-muted pull-right";
@@ -437,7 +450,6 @@ let createWSCard = (WSname, WSdate, WScreator, key, QuestionCount) => {
   
   div_02.appendChild(div_07);
   
-  
   div_03.appendChild(div_06)
   div_006.appendChild(h6_01)
   div_04.appendChild(div_006)
@@ -449,20 +461,26 @@ let createWSCard = (WSname, WSdate, WScreator, key, QuestionCount) => {
 
   div_08.appendChild(div_11);
   div_08.appendChild(div_12);
+  div_08.appendChild(span_05);
   div_06.appendChild(span_01);
   span_02.appendChild(span_03);
 
+  WStotal = 0
+  WScorrect = 0
+  WSwrong = 0
+
   button_get.onclick = function () {
-
-    WStotal = 0
-    WScorrect = 0
-    WSwrong = 0
-
     writeProgressData()
 
     console.log($(this).parent(".card").attr("data-ref"))
     $("#card-cont").empty();
-    $("#study_label").html(WSname + ' by ' + WScreator)  
+    $("#study_label").html("<i class='bx bx-id-card' ></i>" + " " + WSname)  
+    $("#librarySaveButton").attr('data-ref', key)
+
+    $("#tags_label").html("<i class='bx bx-purchase-tag-alt'></i>" + " " + tag1 + " - " + tag2)  
+
+    console.log('increaseWs')
+    increaseWsView(key)
     
     var db_WS = firebase.database().ref("worksheets/" + $(this).attr("data-ref")).orderByKey();
     reset_cursor_params(db_WS);
@@ -472,11 +490,37 @@ let createWSCard = (WSname, WSdate, WScreator, key, QuestionCount) => {
     $("html, body").animate(
       {scrollTop: $("#question-pane").offset().top - 20,},500
     );
-
   };
-
-
 };
+
+var viewNumber = 0
+
+function increaseWsView(key) {
+  firebase.database().ref('worksheets-statistics/' + key).once("value").then((snap) => {
+    snap.forEach((data) => {
+      console.log('inside the statistics')
+        console.log(data.val())
+        console.log(data.key)
+        viewNumber = parseInt(data.val())
+        writeIncreasedViewNumber (key, viewNumber)
+    });
+});
+}
+
+function writeIncreasedViewNumber(key, viewNumber) {
+  console.log('inside writte the statistics')
+  console.log(viewNumber)
+
+  firebase.database().ref('worksheets-statistics/' + key).set({
+      view: viewNumber + 1
+  
+  }, function (error) {
+      if (error) {
+      } else {
+        $("#ws_view").html(("<i class='bx bx-show'></i>") + " " + ( viewNumber + 1) + ' views ')  
+      }
+  });
+}
 
 function getWSdata() {
 
@@ -498,13 +542,19 @@ function getWSdata() {
                   console.log(tt.val())
                   console.log(tt.key)
                   data = tt.val()    
-                  createWSCard(findWSname(ss.key), timeSince(findWSdate(ss.key)), data, ss.key, findWSquestioncount(ss.key)) 
+                  createWSCard(findWSname(ss.key), timeSince(findWSdate(ss.key)), data, ss.key, findWSquestioncount(ss.key), findWStag1(ss.key), findWStag2(ss.key)) 
               });
           });
           
       });
   });
 }
+
+$('#modalAddToLibrary').on('show.bs.modal', function(e) {
+  $(this).find('#modal-wsname').text($('#study_label').text());
+  console.log($('#modal-wsname'))
+});
+
 
 getWSdata();
 

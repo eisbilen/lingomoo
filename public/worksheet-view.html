@@ -33,7 +33,7 @@
 
 
 <body>
-  <!-- ======= Header ======= -->
+  <!-- ======= Header ======= 
   <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
 
@@ -46,10 +46,47 @@
 
       <img id="profile_image" src="/img/user-circle-solid.svg" class="rounded-circle" alt="" width="40" height="40" />
 
-      <!-- Uncomment below if you prefer to use text as a logo -->
-      <!-- <h1 class="logo mr-auto"><a href="index.html">Butterfly</a></h1> -->
     </div>
-  </header><!-- End Header -->
+  </header> End Header -->
+  
+  
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top">
+      <div class="m-2 d-flex align-items-center">
+        <div class="mr-auto">
+          <a href="index.html" class="logo mx-1"><img src="assets/img/lingomoo.svg" alt="" class="img-fluid" /></a>
+          <a href="../worksheet-view.html" class="btn btn-info btn-sm mx-1">Explore</a>
+          <a href="../study.html" class="btn btn-info btn-sm mx-1">Study</a>
+          <a href="../worksheet.html" class="btn btn-info btn-sm mx-1">Create Worksheets</a>
+          <a href="../worksheet-view.html" class="btn btn-info btn-sm mx-1">Your Library</a>
+        </div>
+
+        <button type="button" id="print-button" class="btn btn-primary mr-1" data-toggle="modal" data-target="#staticBackdrop">
+          Save Your Worksheet <span id="ws-question-count" class="badge badge-light">0</span>
+          <span class="sr-only">unread messages</span>
+        </button>
+  
+
+        <div class="btn-group">
+          <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img id="profile_image" src="/img/user-circle-solid.svg" class="rounded-circle" alt="" width="40"
+              height="40" />
+          </a>
+          <div class="dropdown-menu dropdown-menu-right">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">Something else here</a>
+            <div class="dropdown-divider"></div>
+            <a id="logout" class="dropdown-item" href="#">Logout</a>
+          </div>
+        </div>
+
+
+
+      </div>
+    </header>
+    <!-- End Header -->
+
 
   <section id="today" class="about mt-5">
     <div class="container">
@@ -188,7 +225,7 @@
                     <input id = "input3TXT" type="text" class="form-control" aria-label="Text input with dropdown button" maxlength="15">
                   </div>
                   <div id = "invalidTag" class="warningtext d-none">
-                    * Please choose a workseet name
+                    * Please provide tags
                   </div>
 
                 </section>

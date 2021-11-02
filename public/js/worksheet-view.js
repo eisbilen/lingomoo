@@ -237,6 +237,7 @@ document.getElementById("WSSaveButton").onclick = async (e)=> {
         return new Promise(resolve => setTimeout(resolve, ms));
       }
   await writeWS($("input[name=worksheetname]").val(), wsDateTime, tag1, tag2)
+  
   await sleep(500);
    
   window.location.href = "http://www.lingomoo.com/study.html";

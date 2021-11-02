@@ -126,17 +126,15 @@ function queryDatabase(dataObject) {
     promises_answer.push(gsReference_answer.getDownloadURL());
     promises_question.push(gsReference_question.getDownloadURL());
      
-    (function (fl, ca, au, qc) {
+    (function (fl, ca, au) {
       gsReference_question
         .getDownloadURL()
         .then(function (url) {
-          createTaskCard(ca, au, url, fl, qc);
-      
+          createTaskCard(ca, au, url, fl);
           $("#check_answer" + (count - 1).toString()).tooltip("enable");
         })
         .catch(function (error) {
           // Handle any errors
-          
         });
     })(
       filename_question,
@@ -153,10 +151,7 @@ function queryDatabase(dataObject) {
       .catch(function (error) {
         // Handle any errors
       });
-
       console.log(WStotal)
-
-    
   }
 
   //console.log(promises_answer)
