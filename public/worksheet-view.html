@@ -20,8 +20,6 @@
 
   <!-- Vendor CSS Files -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"  crossorigin="anonymous">
-
-
   <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
@@ -30,26 +28,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 </head>
 
-
-
 <body>
-  <!-- ======= Header ======= 
-  <header id="header" class="fixed-top">
-    <div class="container d-flex align-items-center">
 
-      <a href="index.html" class="logo mr-auto"><img src="assets/img/lingomoo.svg" alt="" class="img-fluid"></a>
-
-      <button type="button" id="print-button" class="btn btn-primary mr-1" data-toggle="modal" data-target="#staticBackdrop">
-        Save Your Worksheet <span id="ws-question-count" class="badge badge-light">0</span>
-        <span class="sr-only">unread messages</span>
-      </button>
-
-      <img id="profile_image" src="/img/user-circle-solid.svg" class="rounded-circle" alt="" width="40" height="40" />
-
-    </div>
-  </header> End Header -->
-  
-  
+    
     <!-- ======= Header ======= -->
     <header id="header" class="fixed-top">
       <div class="m-2 d-flex align-items-center">
@@ -62,7 +43,7 @@
         </div>
 
         <button type="button" id="print-button" class="btn btn-primary mr-1" data-toggle="modal" data-target="#staticBackdrop">
-          Save Your Worksheet <span id="ws-question-count" class="badge badge-light">0</span>
+          Save Your Worksheet <span id="ws-question-count" class="badge badge-warning">0</span>
           <span class="sr-only">unread messages</span>
         </button>
   
@@ -80,8 +61,6 @@
             <a id="logout" class="dropdown-item" href="#">Logout</a>
           </div>
         </div>
-
-
 
       </div>
     </header>
@@ -234,7 +213,6 @@
                   <button id="WSSaveButton" type="submit" class="btn btn-success">Save</button>
               </div>
 
-           
               </form>
           </div>
       </div><!-- /.modal-content -->
@@ -257,13 +235,9 @@
   <!-- lingomoo Related JavaScript -->
   <script type="text/javascript" src="/js/database-connection.js"></script>
   <script type="text/javascript" src="/js/login.js"></script>
-
   <script type="text/javascript" src="/js/database_utility.js"></script>
   <script type="text/javascript" src="/js/cursor.js"></script>
   <script type="text/javascript" src="/js/worksheet-view.js"></script>
-
-  <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
 
 </body>
 </html>

@@ -157,7 +157,6 @@ function queryDatabase(dataObject) {
   //console.log(promises_answer)
   $("#previous-button").removeClass("disabled");
   $("#next-button").removeClass("disabled");
-
 }
 
 // This function gets the filter keywords and
@@ -182,12 +181,12 @@ function getQuestionData(cursor) {
 }
 
 //this funton just finds the HTML card container for the questions
-// getdata = 1 if you want filter data shown on screen 
+// getdata = 1 for worksheet.js if you want filter data shown on screen 
+// getdata = 3 for study-worksheet.js if yo do not whant filter data swong on screen
 let initListOfTasks = (getData, cursor) => {
   cardContainer = document.getElementById("card-cont");
   
   if (getData !== 3){
-    
     var dbref = firebase.database().ref("/questions/VERB").orderByKey();
   }
 
@@ -195,8 +194,11 @@ let initListOfTasks = (getData, cursor) => {
     getFilterData(dbref);
   }
 
+  // handle next page requests
+ 
   $("#next-button").click((e) => {
     e.preventDefault();
+    
     url_list = [];
     console.log("--------next--------");
 
@@ -208,9 +210,11 @@ let initListOfTasks = (getData, cursor) => {
       $("#next-button").addClass("disabled");
       getQuestionData(cursor);
     }
+
   });
 
   // handle previous page requests
+  // calls cursor.previous and then use returned value 'data' to call queryDatabes(data)
   $("#previous-button").click((e) => {
     e.preventDefault();
     url_list = [];
@@ -225,6 +229,7 @@ let initListOfTasks = (getData, cursor) => {
       $("#previous-button").addClass("disabled");
       cursor.previous().then((data) => queryDatabase(data));
     }
+
   });
 
   $("#next-button").click();

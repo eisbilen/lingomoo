@@ -8,91 +8,18 @@ let cardContainer;
 var filename_answer = " ";
 var count = 0;
 correct_answer_GLOBAL = 0;
-var WStotal = 0;
-var WScorrect = 0;
-var WSwrong = 0;
-
+var WStotal = 0
+var WScorrect = 0
+var WSwrong = 0
+var first_click = 0
 
 var dbref = firebase.database().ref("/questions_cat/VERB").orderByKey();
 const cursor = new Cursor(dbref, 9);
 
-value =  {};
-
-const WorkSheetCard = {
-  key: "",
-  name: "",
-  dateCreated: "",
-  creator: "",
-  questionCount: "",
-  container: "",
-  tagPrimary: "",
-  tagSecondary: "",
-  url: "",
-  
-  get card() {
-    return `<div class="col-6 mb-3">
-      <div class="card ws p-3 mb-1">
-        <div class="d-flex justify-content-between">
-          <div class="d-flex flex-row align-items-center">
-            <div class="icon">
-              <img class="card-img-top rounded" src="/img/user-circle-solid.svg" style="height: 40px; width: 40px;"></div>
-            <a href="${this.url}" role="button" class="stretched-link" id="data-ref" data-ref="${this.key}"></a>
-            <div class="mx-2 c-details"><h6 class="mb-0" id="WScreator">${this.creator}</h6></div>
-          </div>
-          <div>
-            <span class="text1 text-muted mb-2" id="WSdate">${this.dateCreated}</span>
-          </div>
-        </div>
-        <div class="mt-5">
-          <h3 class="heading" id="WSname">${this.name}</h3>
-          <div class="d-flex align-items-center">
-            <div class="mr-auto mt-2">
-              <span class="text1 text-muted pull-right">${this.questionCount} questions YAPTIM<span class="text2"></span></span>
-            </div>
-            <div>
-              <a class="bx bx-purchase-tag-alt"></a>
-            </div>
-            <span class="text2 text-muted pull-right">${this.tagPrimary} - ${this.tagSecondary}</span>
-          </div>
-        </div>
-      </div>
-    </div>`
-  },
-
-  set card(value) {
-    this.containerId = value.containerId;
-    this.key = value.key;
-    this.name = value.name;
-    this.dateCreated = value.dateCreated;
-    this.creator = value.creator;
-    this.questionCount = value.questionCount;
-    this.tagPrimary = value.tagPrimary;
-    this.tagSecondary = value.tagSecondary;
-    this.url = "study-worksheet.html?worksheetName="
-                + encodeURIComponent(
-                      this.key
-                    + "&wsName="
-                    + this.name
-                    + "&wsTag1="
-                    + this.tagPrimary
-                    + "&wsTag2="
-                    + this.tagSecondary
-                )
-  },
-
-
-  insertCard() {
-    cardContainerHTML = document.getElementById(this.containerId);
-    cardContainerHTML.insertAdjacentHTML('beforeend', this.card);
-  }
-
-};
-
-
-
 $(function () {
   $('[data-toggle="tooltip"]').tooltip();
 });
+
 
 function findWSname(text) {
   var myRe = "___(.+?)!!";
@@ -127,6 +54,7 @@ function findWSquestioncount(text) {
 // This function creates the cards
 // This function is called by queryDatabase function with data for every card
 let createTaskCard = (correct_answer, article_url, url, fl) => {
+
   let card_flip = document.createElement("div");
   card_flip.className = "card questions";
 
@@ -210,7 +138,7 @@ let createTaskCard = (correct_answer, article_url, url, fl) => {
   card_front.appendChild(button_group);
 
   let butt_link = document.createElement("a");
-  butt_link.innerText = "";
+  butt_link.innerText = '';
   butt_link.className = "url btn btn-warning btn-sm bx bx-news";
   butt_link.id = "article_url" + count.toString();
 
@@ -260,7 +188,7 @@ let createTaskCard = (correct_answer, article_url, url, fl) => {
   $("#article_url" + (count - 1).toString()).tooltip("enable");
 
   count = count + 1;
-  WStotal += 1;
+  WStotal +=1
 
   butt.onclick = function () {
     console.log($(this).attr("correct-answer"));
@@ -278,12 +206,13 @@ let createTaskCard = (correct_answer, article_url, url, fl) => {
     if ($(this).attr("correct-answer") == correct_answer_GLOBAL) {
       console.log("dogru");
       $(this).siblings(".correct-img").show();
-      WScorrect += 1;
+      WScorrect +=1;
       writeProgressData();
+
     } else {
       console.log("yaanlisss");
       $(this).siblings(".wrong-img").show();
-      WSwrong += 1;
+      WSwrong +=1;
       writeProgressData();
     }
 
@@ -307,7 +236,7 @@ let createTaskCard = (correct_answer, article_url, url, fl) => {
   card_front.appendChild(correct_img);
   card_front.appendChild(wrong_img);
 
-  console.log(cardContainer);
+  console.log(cardContainer)
   cardContainer.appendChild(card_flip);
 
   for (let i = 0; i < dataFinal.length; i++) {
@@ -317,14 +246,14 @@ let createTaskCard = (correct_answer, article_url, url, fl) => {
 
       if (dataFinal[i][1]["correct_answer"] == correct_answer_GLOBAL) {
         console.log("dogru");
-        WScorrect += 1;
+        WScorrect +=1;
         console.log(WScorrect);
         $("#check_answer" + (count - 1).toString())
           .siblings(".correct-img")
           .show();
       } else {
         console.log("yaanlisss");
-        WSwrong += 1;
+        WSwrong +=1;
         console.log(WSwrong);
         $("#check_answer" + (count - 1).toString())
           .siblings(".wrong-img")
@@ -373,239 +302,283 @@ let createTaskCard = (correct_answer, article_url, url, fl) => {
 
 function writeProgressData() {
   if (WStotal !== 0) {
-    Cper = (WScorrect / WStotal) * 100;
-  } else {
-    Cper = 0;
+    Cper = (WScorrect/WStotal_cursor)*100
+  }
+  else {
+    Cper = 0
   }
 
   if (WSwrong !== 0) {
-    Wper = (WSwrong / WStotal) * 100;
-  } else {
-    Wper = 0;
+    Wper = (WSwrong/WStotal_cursor)*100
+  }
+  else {
+    Wper = 0
   }
 
-  $("#Pcorrect").attr("style", "width: " + Cper + "%");
-  $("#Pwrong").attr("style", "width: " + Wper + "%");
+$('#Pcorrect').attr('style','width: '+ Cper + '%');
+$('#Pwrong').attr('style','width: '+ Wper + '%');
 
-  $("#Pcorrect").html(Math.round((WScorrect / WStotal) * 100) + "%");
-  $("#Pwrong").html(Math.round((WSwrong / WStotal) * 100) + "%");
+$("#Pcorrect").html(Math.round((WScorrect/WStotal)*100) + "%")
+$("#Pwrong").html(Math.round((WSwrong/WStotal)*100) + "%")
 
-  $("#progress_label").html(
-    "<i class='bx bx-trending-up' ></i>" +
-      " " +
-      (WScorrect + WSwrong) +
-      " of " +
-      WStotal +
-      " is completed"
-  );
-}
+$("#progress_label").html("<i class='bx bx-trending-up' ></i>" + " " + (WScorrect + WSwrong) + " of " + WStotal_cursor + " is completed")  
+
+};
 
 
-var viewNumber = 0;
+let createWSCard = (WSname, WSdate, WScreator, key, QuestionCount, tag1, tag2, wscardcount) => {
+  console.log(WScreator)
+  let div_01 = document.createElement("div");
+  div_01.className = "col-6 mb-3";
+   
+  let div_02 = document.createElement("div");
+  div_02.className = "card ws p-3 mb-1";
+
+  let div_03 = document.createElement("div");
+  div_03.className = "d-flex justify-content-between";
+
+  let div_04 = document.createElement("div");
+  div_04.className = "d-flex flex-row align-items-center";
+
+  let div_05 = document.createElement("div");
+  div_05.className = "icon";
+
+  let i_01 = document.createElement("img");
+  i_01.className = "card-img-top rounded";
+  
+  i_01.src = "/img/user-circle-solid.svg" 
+  i_01.style.height = '40px';
+  i_01.style.width = '40px';
+
+  let div_06 = document.createElement("div");
+  //div_06.className = "badge";
+
+  let div_006 = document.createElement("div");
+  div_006.className = "mx-2 c-details";
+
+  let h6_01 = document.createElement("h6");
+  h6_01.className = "mb-0";
+  h6_01.id = "WScreator";
+  h6_01.innerHTML = WScreator;
+
+  let span_01 = document.createElement("span");
+  span_01.className = "text1 text-muted mb-2";
+  span_01.id = "WSdate";
+  span_01.innerHTML = WSdate;
+
+  let div_07 = document.createElement("div");
+  div_07.className = "mt-5";
+
+  let h3_01 = document.createElement("h3");
+  h3_01.className = "heading";
+  h3_01.id = "WSname";
+  h3_01.innerHTML = WSname
+
+  let div_08 = document.createElement("div");
+  div_08.className = "d-flex align-items-center";
+
+  let div_09 = document.createElement("div");
+  div_09.className = "progress";
+
+  let div_10 = document.createElement("div");
+  div_10.className = "progress-bar";
+
+  var attr1 = document.createAttribute("role");
+  attr1.value = "progressbar";
+
+  var attr2 = document.createAttribute("style");
+  attr2.value = "width: 50%";
+
+  var attr3 = document.createAttribute("aria-valuenow");
+  attr3.value = "10";
+
+  var attr4 = document.createAttribute("aria-valuemin");
+  attr4.value = "0";
+
+  var attr5 = document.createAttribute("aria-valuemax");
+  attr5.value = "100";
+
+  div_10.setAttributeNode(attr1);
+  div_10.setAttributeNode(attr2);
+  div_10.setAttributeNode(attr3);
+  div_10.setAttributeNode(attr4);
+  div_10.setAttributeNode(attr5);
+
+  let div_11 = document.createElement("div");
+  div_11.className = "mr-auto mt-2";
+
+  let div_12 = document.createElement("div");
+  let a_add = document.createElement("a");
+  a_add.className = 'bx bx-purchase-tag-alt';
+ 
+  let span_05 = document.createElement("span");
+  span_05.className = "text2 text-muted pull-right";
+
+  span_05.innerHTML = " " + tag1 + " - " + tag2
+
+  let span_02 = document.createElement("span");
+  span_02.className = "text1 text-muted pull-right";
+  span_02.innerHTML = QuestionCount + " questions"
+
+  let span_03 = document.createElement("span");
+  span_03.className = "text2";
+  span_03.innerHTML = ""
+
+  let button_get = document.createElement("a");
+  button_get.setAttribute("role", "button");
+  button_get.setAttribute("class", "stretched-link");
+  button_get.setAttribute("id", "data-ref");
+
+  var attr_data = document.createAttribute("data-ref");
+  attr_data.value = key;
+
+
+  button_get.setAttributeNode(attr_data);
+
+
+  into = document.querySelector('#into')
+
+  into.appendChild(div_01);
+  div_01.appendChild(div_02);
+  
+  div_02.appendChild(div_03);
+  div_03.appendChild(div_04)
+  
+  div_04.appendChild(div_05)
+  div_05.appendChild(i_01)
+  div_11.appendChild(span_02)
+  
+  div_04.appendChild(button_get);
+  
+  div_02.appendChild(div_07);
+  
+  div_03.appendChild(div_06)
+  div_006.appendChild(h6_01)
+  div_04.appendChild(div_006)
+  
+  div_07.appendChild(h3_01);
+  div_07.appendChild(div_08);
+
+  div_12.appendChild(a_add);
+
+  div_08.appendChild(div_11);
+  div_08.appendChild(div_12);
+  div_08.appendChild(span_05);
+  div_06.appendChild(span_01);
+  span_02.appendChild(span_03);
+
+  WStotal = 0
+  WScorrect = 0
+  WSwrong = 0
+
+
+};
+
+var viewNumber = 0
 
 function increaseWsView(key) {
-  firebase
-    .database()
-    .ref("worksheets-statistics/" + key)
-    .once("value")
-    .then((snap) => {
-      snap.forEach((data) => {
-        console.log("inside the statistics");
-        console.log(data.val());
-        console.log(data.key);
-        viewNumber = parseInt(data.val());
-        writeIncreasedViewNumber(key, viewNumber);
-      });
+  firebase.database().ref('worksheets-statistics/' + key).once("value").then((snap) => {
+    snap.forEach((data) => {
+      console.log('inside the statistics')
+        console.log(data.val())
+        console.log(data.key)
+        viewNumber = parseInt(data.val())
+        writeIncreasedViewNumber (key, viewNumber)
     });
+});
 }
 
 function writeIncreasedViewNumber(key, viewNumber) {
-  console.log("inside writte the statistics");
-  console.log(viewNumber);
+  console.log('inside writte the statistics')
+  console.log(viewNumber)
 
-  firebase
-    .database()
-    .ref("worksheets-statistics/" + key)
-    .set(
-      {
-        view: viewNumber + 1,
-      },
-      function (error) {
-        if (error) {
-        } else {
-          $("#ws_view").html(
-            "<i class='bx bx-show'></i>" + " " + (viewNumber + 1) + " views "
-          );
-        }
-      }
-    );
-}
-
-function snapshotToArray(snapshot) {
-  var returnArr = {};
-
-  snapshot.forEach(function(childSnapshot) {
-      var item = childSnapshot.val();
-      item.key = childSnapshot.key;
-      returnArr[item.key] = item;
-  });
-  return returnArr;
-};
-
-async function getFirebaseData(endpoint){
-  endpoint.once("value").then((snap) =>  {
-      return snapshotToArray(snapshots)
-  });
-}
-
-
-
-function WorksheetCardData() {
-
-  this.getData = databaseRef => {
-    datadata = []
-
-    console.log(databaseRef)
-      var data = "";
-      let WSuserid = "";
-      let dataMain = new Array;
-      const respose = await getFirebaseData(databaseRef)
-      console.log(respose);
-
-
-        snap = []
-        snap.forEach((ss) => {
-          wscardcount += 1;
-          WSuserid = findWScreator(ss.key);
-          var db = firebase.database().ref("/users" + "/" + WSuserid).limitToFirst(1);
-          console.log(WSuserid);
-    
-          db.once("value").then((snap) => {
-            console.log(snapshotToArray(snap))
-            
-          console.log(snap.forEach((tt) => {
-              console.log(tt.val());
-              console.log(tt.key);
-              data = tt.val();
-    
-              cardData = {}
-              cardData['key'] = ss.key;
-              cardData['name'] = findWSname(ss.key);
-              cardData['dateCreated'] = timeSince(findWSdate(ss.key));
-              cardData['creator'] = data;
-              cardData['questionCount'] = findWSquestioncount(ss.key);
-              cardData['containerId'] = 'into';
-              cardData['tagPrimary'] = findWStag1(ss.key);
-              cardData['tagSecondary'] = findWStag2(ss.key);
-              dataMain.push(cardData)
-              //return dataMain
-            }))
-            console.log(dataMain)
-           
-    
-          });
-    
-        });
-
-
-      return datadata;
-  }
-
+  firebase.database().ref('worksheets-statistics/' + key).set({
+      view: viewNumber + 1
   
-
+  }, function (error) {
+      if (error) {
+      } else {
+        $("#ws_view").html(("<i class='bx bx-show'></i>") + " " + ( viewNumber + 1) + ' views ')  
+      }
+  });
 }
-
-function UIData() {
-  this.dataType = ""
-
-  this.setStrategy = (dataType) => {
-    this.dataType = dataType
-  }
-
-  this.getData = databaseRef => {
-    return this.dataType.getData(databaseRef)
-  }
-}
-
-const uiData = new UIData()
-const worksheetCardData = new WorksheetCardData()
-const databaseRef = firebase.database().ref("/worksheets").limitToLast(8);
-databaseRef.then()
-
-uiData.setStrategy(worksheetCardData)
-console.log(uiData.getData(databaseRef))
-ddd = [{data:1},{data:2},{data:3}]
-ddd.push({data: 6})
-console.log(ddd)
-
-uiData.getData(databaseRef).forEach(data => {
-  for (let key in data) {
-      console.log(`${key}: ${data[key]}`);
-  }
-});
-
-
-
-uiData.getData(databaseRef).forEach( cardData => {
-  console.log(cardData)
-  WorkSheetCard.card = cardData;
-  WorkSheetCard.insertCard();
-
-})
 
 function getWSdata() {
+
   var data = "";
   let WSuserid = "";
-  var dbref = firebase.database().ref("/worksheets").limitToLast(8);
+  var dbref = firebase.database().ref("/worksheets").limitToLast(6);
 
   dbref.once("value").then((snap) => {
-    // store data in array so it's ordered
+      // store data in array so it's ordered
+     
+      wscardcount = 0
+      snap.forEach((ss) => {
+          wscardcount += 1
 
-    wscardcount = 0;
-    snap.forEach((ss) => {
-      wscardcount += 1;
+          WSuserid = findWScreator(ss.key)
+          var db = firebase.database().ref("/users" + "/" + WSuserid).limitToFirst(1);
+          console.log(WSuserid)
 
-      WSuserid = findWScreator(ss.key);
-      var db = firebase
-        .database()
-        .ref("/users" + "/" + WSuserid)
-        .limitToFirst(1);
-      console.log(WSuserid);
-
-      db.once("value").then((snap) => {
-        snap.forEach((tt) => {
-          console.log(tt.val());
-          console.log(tt.key);
-          data = tt.val();
-
-          cardData =  {}
-          cardData['key'] = ss.key;
-          cardData['name'] = findWSname(ss.key);
-          cardData['dateCreated'] = timeSince(findWSdate(ss.key));
-          cardData['creator'] = data;
-          cardData['questionCount'] = findWSquestioncount(ss.key);
-          cardData['containerId'] = 'into';
-          cardData['tagPrimary'] = findWStag1(ss.key);
-          cardData['tagSecondary'] = findWStag2(ss.key);
-
-          WorkSheetCard.card = cardData;
-          WorkSheetCard.insertCard();
-
-        });
+          db.once("value").then((snap) => {
+              snap.forEach((tt) => {
+                  console.log(tt.val())
+                  console.log(tt.key)
+                  data = tt.val()    
+                  createWSCard(findWSname(ss.key), timeSince(findWSdate(ss.key)), data, ss.key, findWSquestioncount(ss.key), findWStag1(ss.key), findWStag2(ss.key), wscardcount) 
+                  if (wscardcount == 6) {
+                    //document.getElementById("data-ref").click(); 
+                }
+              });
+          });
+          
       });
-    });
-
-
   });
+
+
 }
 
+function create_question_cards() {
+
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+
+    
+    var fields = params['worksheetName'].split('&');
+    console.log(fields)
+
+    var key = fields['0'] 
+    var WSname = fields['1'].split('=')[1]
+    var tag1 = fields['2'].split('=')[1]
+    var tag2 = fields['3'].split('=')[1] 
+
+    console.log(key)
+    console.log(WSname)
+    writeProgressData()
 
 
 
-$("#modalAddToLibrary").on("show.bs.modal", function (e) {
-  $(this).find("#modal-wsname").text($("#study_label").text());
-  console.log($("#modal-wsname"));
-});
+    $("#card-cont").empty();
+    $("#study_label").html("<i class='bx bx-id-card' ></i>" + " " + WSname)  
+    $("#librarySaveButton").attr('data-ref', key)
+
+    $("#tags_label").html("<i class='bx bx-purchase-tag-alt'></i>" + " " + tag1 + " - " + tag2)  
+
+    console.log('increaseWs')
+    increaseWsView(key)
+    
+    var db_WS = firebase.database().ref("worksheets/" + key);
+    reset_cursor_params(db_WS);
+    const cursor_ws = new Cursor(db_WS, 25);
+    initListOfTasks(3, cursor_ws);
+    console.log('first clock')
+    console.log(first_click)
+    if (first_click !== 0){
+        $("html, body").animate({scrollTop: $("#question-pane").offset().top - 20,},500);
+    }
+    
+};
+
+create_question_cards()
 
 
-//getWSdata()

@@ -27,6 +27,7 @@
   
   <!-- Web Components JS Files -->
   <script type="module" src="assets/js/lingomoo-main-filter.js"></script>
+
   <script type="module" src="assets/js/lingomoo-footer.js"></script>
 </head>
 
@@ -45,37 +46,76 @@
     </div>
   </header>
   <!-- End Header -->
+  
 
-  <section id="today" class="about mt-5">
+  <section class="about mt-5">
     <div class="container">
       <div class="row mt-5">
         <div class="col">
-          <img src="assets/img/img1.png" class="img-fluid" alt="">
-        </div>
-
-        <div class="col">
-          <h2 class="lingoo-title font-weight-bold text-center my-5">Create interactive worksheets</h2>
+          <h2 class="lingoo-title font-weight-bold text-center my-5">Study interactive worksheets</h2>
           <h5 class="lingoo-body font-weight-light text-center my-5">Explore interactive worksheets on Lingomoo. Learn
             what you need to get good results in your language classes and improve your fluency. Memorise important
             terms, definitions, vocabulary, conjugations and grammar rules.
           </h5>
         </div>
-
+        <div class="col">
+          <img src="assets/img/study_ws.png" class="img-fluid" alt="">
+        </div>
       </div>
     </div>
   </section>
 
-  <section>
-    <div class="container mt-5">
-      <h2 class="lingoo-title font-weight-bold text-center">Latest worksheets created by others</h2>
-      <div class="container">
-        <div class="mr-auto mt-5 mb-1 row">
-          <a href="../worksheet-view.html" class="btn btn-danger btn-sm ml-auto"><i class='bx bx-collection'></i> View all</a>
-        </div>
+  <section id="question-pane">
+    <div class="container my-5">
+      <h2 class="lingoo-title font-weight-bold text-center">Study worksheets</h2>
+    </div>
+
+    <div class="container d-flex align-items-center mt-5">
+      <h3 id="study_label" class="mr-auto text-left lingoo-statistics font-weight-light"></h3>
+      <h4 id="progress_label" class="mr-auto  text-center align-middle lingoo-statistics font-weight-light"><i class='bx bx-timer'></i> Your progress</h4>
+      <h3 id="tags_label" class="text-rigth align-middle lingoo-statistics font-weight-light"><i class='bx bx-purchase-tag-alt'></i> Tags </h3>
+    </div>
+
+    <div class="container">
+      <div class="progress mb-5" style="max-width: 100%">
+        <div id="Pcorrect" class="progress-bar bg-success progress-bar-stripped" style="width: 0%"></div>
+        <div id="Pwrong" class="progress-bar bg-danger progress-bar-stripped" style="width: 0%"></div>
       </div>
     </div>
+    
+    <div class="container d-flex align-items-center">
+      </i> <h4 id="ws_view" class="text-left align-middle px-1 lingoo-statistics font-weight-light"></i></h4>
+      <h4 id="ws_like" class="mr-auto text-left align-middle px-5 lingoo-statistics font-weight-light"><i class='bx bx-like'></i> 2 likes</h4>
+      <a href="#" role="button" class="btn btn-danger btn-sm mx-1" id="print" data-ref=""><i class='bx bx-printer' ></i> Print</a>
+      <a href="#" role="button" class="btn btn-danger btn-sm mx-1" id="share" data-ref=""><i class='bx bx-share-alt' ></i> Share</a>
+      <a href="#" role="button" class="btn btn-danger btn-sm mx-1" id="addToLibrary--" data-ref="" data-toggle="modal" data-target="#modalAddToLibrary"><i class='bx bx-book-add' ></i> Add to my library</a>
+    </div>
+
     <div class="container">
-      <div id="into" class="row">
+      <div class="card-cont">
+        <div class="row mt-2">
+
+        </div>
+
+        <div class="row">
+          <div id="card-cont" class="card-columns"></div>
+        </div>
+
+        <div class="row mt-4 d-none">
+          <div class="col text-center">
+            <h4 id="index-text"></h4>
+          </div>
+        </div>
+
+        <div class="row d-none">
+          <div class="col-6 text-center">
+            <a id="previous-button" class="btn btn-primary" href="#" role="button">Previous</a>
+          </div>
+          <div class="col-6 text-center">
+            <a id="next-button" class="btn btn-primary" href="#" role="button">Next</a>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -84,45 +124,6 @@
     <lingomoo-footer></lingomoo-footer>
   </section>
 
-  <div class="container">
-
-    <div class="row">
-      <div class="alert alert-warning myalert fade in text-center col my-4" id="addLibrary-alert">
-        Cannot add this worksheet into your library at the moment, please try later :(
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="alert alert-success myalert fade in text-center col my-4" id="addLibrary-success">
-        Worksheet is successfully saved into your library :)
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Modal HTML Markup -->
-  <div class="modal fade" id="modalAddToLibrary" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-info">
-                <h1 class="lingoo-modal-title">Save this worksheet to your library</h1>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form role="form" method="POST" class="needs-validation" novalidate action="">
-                  <section>
-                    <h3 class="lingoo-body font-weight-light" id="modal-wsname">Worksheet name</h3>
-                  </section>
-                  <div>
-                    <button id="librarySaveButton" type="submit" class="btn btn-primary">Add to my library</button>
-                  </div>
-                </form>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
 
   <a href="#" class="back-to-top"><i class="bx bx-chevron-up-circle"></i></a>
 
@@ -143,8 +144,8 @@
   <script type="text/javascript" src="/js/login.js"></script>
   <script type="text/javascript" src="js/cursor.js"></script>
   <script type="text/javascript" src="js/database_utility.js"></script>
-  <script type="text/javascript" src="/js/search.js"></script>
+  <script type="text/javascript" src="/js/study-worksheet.js"></script>
+
 
 </body>
-
 </html>

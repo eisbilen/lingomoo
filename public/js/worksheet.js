@@ -13,7 +13,6 @@ correct_answer_GLOBAL = 0;
 var dbref = firebase.database().ref("/questions_cat/VERB").orderByKey();
 const cursor = new Cursor(dbref, 9);
 
-
 $(function () {
     $('[data-toggle="tooltip"]').tooltip()
 })

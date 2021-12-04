@@ -1,5 +1,5 @@
 var uid;
-var dbref = firebase.database().ref("users/' + uid + '/worksheet").orderByKey();
+//var dbref = firebase.database().ref("users/' + uid + '/worksheet").orderByKey();
 
 // this function 
 function login() {
@@ -31,6 +31,15 @@ function login() {
         console.log(errorCode)
         // ...
     });
+}
+
+function logout() {
+firebase.auth().signOut().then(function() {
+    // Sign-out successful.#
+    window.location.href = "http://www.lingomoo.com/index.html";
+  }, function(error) {
+    // An error happened.
+  });
 }
 
 // adds selected question into the user worksheet folder
@@ -140,9 +149,7 @@ function writeSingleToLibrary(key_main, key, data) {
         if (error) {
         } else {}
     });
-
 }
-
 
 // main function for storing Ws data in firebase
 // loops all questions in users/id/worksheet node
@@ -178,7 +185,6 @@ function libraryFailAlert(){
       $("#addLibrary-alert").slideUp(250);
     });
 }
-
 
 // main function for adding a WS item into user library
 // looks worksheets/key to access the specific WS item
@@ -295,5 +301,13 @@ $(document).ready(function () {
         writeToLibrary($(this).attr("data-ref"))
         $('#modalAddToLibrary').modal('hide');
       });
+
+      $('#logout').click (function (e) {
+        e.preventDefault(); 
+        logout()
+        
+      });
+
+//  document.getElementById("data-ref").click(); 
 
 });

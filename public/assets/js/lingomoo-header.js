@@ -29,7 +29,6 @@ customElements.define(
       super();
       const root = this.attachShadow({ mode: "open" });
       root.appendChild(template.content.cloneNode(true));
-
     }
     connectedCallback() {
     }

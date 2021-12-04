@@ -31,19 +31,22 @@
 </head>
 
 <body>
-  <!-- ======= Header ======= 
+
+  <!-- ======= Header ======= -->
   <header id="header" class="fixed-top">
-    <div class="container d-flex align-items-center">
-
-      <a href="index.html" class="logo mr-auto"><img src="assets/img/lingomoo.svg" alt="" class="img-fluid"></a>
-
+    <div class="m-2 d-flex align-items-center">
+      <div class="mr-auto">
+        <a href="index.html" class="logo mx-1"><img src="assets/img/lingomoo.svg" alt="" class="img-fluid" /></a>
+        <a href="../worksheet-view.html" class="btn btn-info btn-sm mx-1">Explore</a>
+        <a href="../study.html" class="btn btn-info btn-sm mx-1">Study</a>
+        <a href="../worksheet.html" class="btn btn-info btn-sm mx-1">Create Worksheets</a>
+        <a href="../worksheet-view.html" class="btn btn-info btn-sm mx-1">Your Library</a>
+      </div>
 
       <a href="../worksheet-view.html" class="btn btn-primary mr-1">
-        View Your Worksheet <span id="ws-question-count" class="badge badge-light">0</span>
+        View Your Worksheet <span id="ws-question-count" class="badge badge-warning">0</span>
         <span class="sr-only">unread messages</span>
       </a>
-
-    
 
       <div class="btn-group">
         <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -59,85 +62,63 @@
         </div>
       </div>
 
-
     </div>
-  </header>End Header -->
-
-    <!-- ======= Header ======= -->
-    <header id="header" class="fixed-top">
-      <div class="m-2 d-flex align-items-center">
-        <div class="mr-auto">
-          <a href="index.html" class="logo mx-1"><img src="assets/img/lingomoo.svg" alt="" class="img-fluid" /></a>
-          <a href="../worksheet-view.html" class="btn btn-info btn-sm mx-1">Explore</a>
-          <a href="../study.html" class="btn btn-info btn-sm mx-1">Study</a>
-          <a href="../worksheet.html" class="btn btn-info btn-sm mx-1">Create Worksheets</a>
-          <a href="../worksheet-view.html" class="btn btn-info btn-sm mx-1">Your Library</a>
+  </header>
+  <!-- End Header -->
+  <section class="about mt-5">
+    <div class="container">
+      <div class="row mt-5">
+        <div class="col">
+          <img src="assets/img/img1.png" class="img-fluid" alt="">
         </div>
 
-        <a href="../worksheet-view.html" class="btn btn-primary mr-1">
-          View Your Worksheet <span id="ws-question-count" class="badge badge-light">0</span>
-          <span class="sr-only">unread messages</span>
-        </a>
-
-
-        <div class="btn-group">
-          <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img id="profile_image" src="/img/user-circle-solid.svg" class="rounded-circle" alt="" width="40"
-              height="40" />
-          </a>
-          <div class="dropdown-menu dropdown-menu-right">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
-            <div class="dropdown-divider"></div>
-            <a id="logout" class="dropdown-item" href="#">Logout</a>
-          </div>
+        <div class="col">
+          <h2 class="lingoo-title font-weight-bold text-center my-5">Create interactive worksheets</h2>
+          <h5 class="lingoo-body font-weight-light text-center my-5">Explore interactive worksheets on Lingomoo. Learn
+            what you need to get good results in your language classes and improve your fluency. Memorise important
+            terms, definitions, vocabulary, conjugations and grammar rules.
+          </h5>
         </div>
-
-
 
       </div>
-    </header>
-    <!-- End Header -->
+    </div>
+  </section>
 
-
-  <section id="today" class="about mt-5">
+  <section id="browse-PoS" class="about mt-5">
     <div class="container mt-5">
+      <h2 class="lingoo-title font-weight-bold text-center my-5">Browse by part of the speech</h2>
       <lingomoo-main-filter></lingomoo-main-filter>
     </div>
   </section>
 
-  <section>
+  <section id="filter-keyword">
     <div class="container">
+      <h2 class="lingoo-title font-weight-bold text-center my-5">Filter content by keywords</h2>
+      <div class="container border rounded mb-3">
+        <div id="pre-list" class="scrolling-wrapper"></div>
+      </div>
+
+
       <div class="row">
-        <h2 class="mb-3">Filter content by keywords</h2>
-        <p></p>
-        <p></p>
-        <div class="container border rounded mb-3">
-          <div id="pre-list" class="scrolling-wrapper"></div>
+        <div class="alert alert-warning myalert fade in text-center col my-4" id="max-alert">
+          Maximum 24 question is allowed!
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="alert alert-warning myalert fade in text-center col my-4" id="max-alert">
-        Maximum 24 question is allowed!
+      <div class="row">
+        <div class="alert alert-success myalert fade in text-center col my-4" id="success-alert">
+          Question added successfuly :)
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="alert alert-success myalert fade in text-center col my-4" id="success-alert">
-        Question added successfuly :)
+      <div class="row">
+        <div class="alert alert-danger myalert fade in text-center col my-4" id="danger-alert">
+          Error while adding question, try again later :(
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="alert alert-danger myalert fade in text-center col my-4" id="danger-alert">
-        Error while adding question, try again later :(
-      </div>
-    </div>
     </div>
 
   </section>
 
-  <section>
+  <section id="question-pane">
     <div class="container">
       <div class="row mt-4">
         <h5 id="study_label" class="text-center"></h5>
@@ -189,10 +170,6 @@
   <script type="text/javascript" src="/js/database_utility.js"></script>
   <script type="text/javascript" src="/js/cursor.js"></script>
   <script type="text/javascript" src="/js/worksheet.js"></script>
-
-  <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
-
 
 </body>
 

@@ -129,7 +129,7 @@ $(document).ready(function () {
         .ref("users/" + uid + "/worksheet")
         .orderByKey();
       console.log(uid);
-      const cursor = new Cursor(dbref, 9);
+      const cursor = new Cursor(dbref, 24);
 
       initListOfTasks(0);
       getQuestionData(cursor);

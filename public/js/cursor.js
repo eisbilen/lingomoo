@@ -2,6 +2,8 @@
 // this class create a pagination system for firebase realtime database
 // it has next() nad previous() functions which returs data from firebase database based on the referans node
 // if the referance node is VERBs, then it gets the questions related VERBs from the database
+WStotal_cursor = 0
+
 class Cursor {
   // constructor for cursor
   // inputs are baseRef which is the firebase database ref node
@@ -9,6 +11,7 @@ class Cursor {
   constructor(baseRef, pageSize) {
     //database referance node
     this.baseRef = baseRef;
+    
    
     // These defines from where the data retrival starts and ends
     this.firstKey = null;
@@ -72,6 +75,7 @@ class Cursor {
       });
       console.log("data.length");
       console.log(data.length);
+      WStotal_cursor = data.length;
 
       if (data.length == 1 && this.firstIndex != 1) {
         this.lastRecord = 1;

@@ -16,8 +16,6 @@ template.innerHTML = `
 
 
 <div class="container mt-4">
-<h2>Browse by subject</h2>
-<p></p>
 <div class="row row-cols-1 row-cols-md-3">
 
   <div class="col p-3">
@@ -92,7 +90,6 @@ customElements.define(
 
       root.appendChild(template.content.cloneNode(true));
 
-      
       function removeAllChildNodes(parent) {
         while (parent.firstChild) {
             parent.removeChild(parent.firstChild);
@@ -127,6 +124,9 @@ customElements.define(
             console.log("keys");
             console.log(keys);
           });
+
+          $("html, body").animate({scrollTop: $("#browse-PoS").offset().top - 20,},500);
+
       };
 
       this.$("#filter2").onclick = function () {
@@ -154,6 +154,8 @@ customElements.define(
             console.log("keys");
             console.log(keys);
           });
+
+          $("html, body").animate({scrollTop: $("#browse-PoS").offset().top - 20,},500);
 
       };
 
@@ -183,6 +185,9 @@ customElements.define(
             console.log(keys);
           });
 
+          $("html, body").animate({scrollTop: $("#browse-PoS").offset().top - 20,},500);
+
+
       };
 
       this.$("#filter4").onclick = function () {
@@ -210,6 +215,8 @@ customElements.define(
             console.log("keys");
             console.log(keys);
           });
+
+          $("html, body").animate({scrollTop: $("#browse-PoS").offset().top - 20,},500);
       };
 
       this.$("#filter5").onclick = function () {
@@ -237,6 +244,7 @@ customElements.define(
             console.log("keys");
             console.log(keys);
           });
+          $("html, body").animate({scrollTop: $("#browse-PoS").offset().top - 20,},500);
       };
 
       this.$("#filter6").onclick = function () {
@@ -264,6 +272,7 @@ customElements.define(
             console.log("keys");
             console.log(keys);
           });
+          $("html, body").animate({scrollTop: $("#browse-PoS").offset().top - 20,},500);
 
       };
 
