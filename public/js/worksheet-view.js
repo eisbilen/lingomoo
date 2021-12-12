@@ -9,7 +9,7 @@ var ws_question_list = [];
 let cardContainer;
 var filename_answer = " ";
 var count = 0;
-correct_answer_GLOBAL = 0;
+userAnswerGLOBAL = 0;
 
 var tag1 = ""
 var tag2 = ""

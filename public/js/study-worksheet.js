@@ -1,584 +1,360 @@
-var dataObject = [];
-var dataObject2 = [];
-var dataFinal = [];
-var url_list = [];
-var img_list = [];
+///////////// Define Global Const ///////////////
+let userAnswerGLOBAL = 0;
+let totalQuestionCount = 0;
+let countCorrectAnswer = 0;
+let countWrongAnswer = 0;
+let cardData = {}
+//////////////////////////////////////////////////
 
-let cardContainer;
-var filename_answer = " ";
-var count = 0;
-correct_answer_GLOBAL = 0;
-var WStotal = 0
-var WScorrect = 0
-var WSwrong = 0
-var first_click = 0
+///////////// Get the URL Parameters /////////////
+const urlSearchParams = new URLSearchParams(window.location.search);
+const params = Object.fromEntries(urlSearchParams.entries());
+const fields = params["worksheetName"].split("&");
+const key = fields["0"];
+const WSname = fields["1"].split("=")[1];
+const tag1 = fields["2"].split("=")[1];
+const tag2 = fields["3"].split("=")[1];
+//////////////////////////////////////////////////
 
-var dbref = firebase.database().ref("/questions_cat/VERB").orderByKey();
-const cursor = new Cursor(dbref, 9);
+///////////// UI DISPLAY ITEMS /////////////
+const UIDisplayWorksheetTitle = {
+  worksheetName: "",
+  countAnsweredQuestion: 0,
+  totalQuestionCount: 0,
+  worksheetTag1: "",
+  worksheetTag2: "",
+  HTMLContainerIDWorksheetTitle: 'worksheet-title',
+  
+  updateWorksheetTitle: function () {
+    document.getElementById(this.HTMLContainerIDWorksheetTitle).innerHTML = this.worksheetTitle;
+  },
+
+  get worksheetTitle() {
+    return `<div class="container d-flex align-items-center mt-5">
+              <h3 id="study_label" class="mr-auto text-left lingoo-statistics font-weight-light"><i class="bx bx-id-card"></i>${this.worksheetName}</h3>
+              <h4 id="progress_label" class="mr-auto  text-center align-middle lingoo-statistics font-weight-light"><i class="bx bx-trending-up"></i> ${this.countAnsweredQuestion} of ${this.totalQuestionCount} is completed</h4>
+              <h3 id="tags_label" class="text-rigth align-middle lingoo-statistics font-weight-light"><i class="bx bx-purchase-tag-alt"></i> ${this.worksheetTag1} - ${this.worksheetTag2}</h3>
+            </div>`;
+  },
+
+  set worksheetTitle(value) {
+    this.worksheetName = value.worksheetName
+    this.countAnsweredQuestion = value.countAnsweredQuestion;
+    this.totalQuestionCount = value.totalQuestionCount;
+    this.worksheetTag1 = value.worksheetTag1;
+    this.worksheetTag2 = value.worksheetTag2;
+    this.HTMLContainerIDWorksheetTitle = value.HTMLContainerIDWorksheetTitle;
+  },
+
+  insertWorksheetTitle() {
+    cardContainerHTML = document.getElementById(this.HTMLContainerIDWorksheetTitle);
+    cardContainerHTML.insertAdjacentHTML("beforeend", this.worksheetTitle);
+  },
+}
+const UIDisplayProgressBar = {
+  percentageCorrectAnswer: 0,
+  percentageWrongAnswer: 0,
+  countCorrectAnswer: 0,
+  countWrongAnswer: 0,
+  totalQuestionCount: 0,
+  HTMLContainerIDProgressbar: 'progress-bar',
+  
+  updateProgressBar: function () {
+    document.getElementById(this.HTMLContainerIDProgressbar).innerHTML = this.progressBar;
+  },
+
+  get progressBar() {
+    return `<div>
+              <div class="progress mb-5" style="max-width: 100%">
+                <div id="correct-answer" class="progress-bar bg-success progress-bar-stripped" style="width: ${this.percentageCorrectAnswer}%">${this.percentageCorrectAnswer}% - ${this.countCorrectAnswer}</div>
+                <div id="wrong-answer" class="progress-bar bg-danger progress-bar-stripped" style="width: ${this.percentageWrongAnswer}%">${this.percentageWrongAnswer}% - ${this.countWrongAnswer}</div>
+              </div>
+            </div>`;
+  },
+
+  set progressBar(value) {
+    this.percentageCorrectAnswer = value.percentageCorrectAnswer;
+    this.percentageWrongAnswer = value.percentageWrongAnswer;
+    this.countCorrectAnswer = value.countCorrectAnswer;
+    this.countWrongAnswer = value.countWrongAnswer;
+    this.totalQuestionCount = value.totalQuestionCount;
+    this.HTMLContainerIDProgressbar = value.HTMLContainerIDProgressbar;
+  },
+
+  insertProgressBar() {
+    cardContainerHTML = document.getElementById(this.HTMLContainerIDProgressbar);
+    cardContainerHTML.insertAdjacentHTML("beforeend", this.progressBar);
+  },
+}
+const UIDisplayQuestionCard = {
+  questionIndex: 0,
+  questionCorrectAnswer: "",
+  questionUserAnswer: "",
+  questionArticleUrl: "",
+  questionImageUrl: "",
+  questionFileName: "",
+  HTMLContainerIDQuestionCardsTopLevel: "",
+  HTMLImageClassQuestionCard: "",
+  HTMLImageStyleTick: "",
+  HTMLImageStyleCross: "",
+  HTMLButtonGroupStyleQuestionOptions: "",
+  HTMLButtonStyleCheckQuestionAnswer: "",
+  
+  buttonAOptionFunc: () => {console.log("ButtonA");
+                            userAnswerGLOBAL = 0;},
+  buttonBOptionFunc: () => {console.log("ButtonB");
+                            userAnswerGLOBAL = 1;},
+  buttonCOptionFunc: () => {console.log("ButtonC");
+                            userAnswerGLOBAL = 2;}, 
+  buttonDOptionFunc: () => {console.log("ButtonD");
+                            userAnswerGLOBAL = 3;},
+
+  buttonCheckAnswerFunc: function () {
+                            correctAnswer = $(this).attr("correct-answer")
+                            questionFileName = $(this).siblings(".card-img-top").attr("id")
+                            questionCardElement = $(this).siblings(".card-img-top")
+                            optionButtonGroupElement = $(this).siblings(".btn-group")
+                            correctImageElement = $(this).siblings(".correct-img")
+                            wrongImageElement = $(this).siblings(".wrong-img")
+                            checkButtonElement = $(this)
+                            checkButtonElement.tooltip("hide");
+                            checkButtonElement.remove();
+                            optionButtonGroupElement.remove();
+
+                            if (userAnswerGLOBAL == correctAnswer) {
+                              correctImageElement.show();
+                              countCorrectAnswer += 1;
+                            } 
+                            else {
+                              wrongImageElement.show();
+                              countWrongAnswer += 1;
+                            }
+
+                            addUserQuestionAnswered(
+                              questionFileName,
+                              correctAnswer,
+                              userAnswerGLOBAL);
+
+                            setAnswerImageToQuestion(
+                              questionFileName,
+                              questionCardElement);
+
+                            updateTitleAndProcessBar();
+                          },
+
+  get card() {
+    return `<div class="card">
+              <div class="card-img-top">
+                <div class="btn btn-group" style="${this.HTMLButtonGroupStyleQuestionOptions}">
+                  <button id="button-A${this.questionIndex}" type="button" class="btn btn-primary btn-sm">A</button>
+                  <button id="button-B${this.questionIndex}" type="button" class="btn btn-primary btn-sm">B</button>
+                  <button id="button-C${this.questionIndex}" type="button" class="btn btn-primary btn-sm">C</button>
+                  <button id="button-D${this.questionIndex}" type="button" class="btn btn-primary btn-sm">D</button>
+                </div>
+                <img id="${this.questionFileName}" class="${this.HTMLImageClassQuestionCard}" src="${this.questionImageUrl}">
+                <a id="check-answer${this.questionIndex}" style="${this.HTMLButtonStyleCheckQuestionAnswer}" class="btn btn-warning btn-sm bx bx-right-arrow-circle" data-toggle="tooltip" data-placement="top" title="" correct-answer="${this.questionCorrectAnswer}" data-original-title="Check the Answer"></a>
+                <a class="url btn btn-warning btn-sm bx bx-news" id="" data-toggle="tooltip" data-placement="top" title="" href="${this.questionFileName}" target="_blank" data-original-title="Read the News Article"></a>
+                <img class="correct-img" style="${this.HTMLImageStyleTick}" src="assets/img/correct.png">
+                <img class="wrong-img" style="${this.HTMLImageStyleCross}" src="assets/img/wrong.png">
+              </div>
+            </div>`;
+  },
+
+  set card(value) {
+    this.questionCorrectAnswer = value.questionCorrectAnswer;
+    this.questionArticleUrl = value.questionArticleUrl;
+    this.questionImageUrl = value.questionImageUrl;
+    this.questionFileName = value.questionFileName;
+    this.questionIndex = value.questionIndex;
+    this.HTMLImageStyleTick = value.HTMLImageStyleTick;
+    this.HTMLImageStyleCross = value.HTMLImageStyleCross;
+    this.HTMLButtonGroupStyleQuestionOptions = value.HTMLButtonGroupStyleQuestionOptions;
+    this.HTMLButtonStyleCheckQuestionAnswer = value.HTMLButtonStyleCheckQuestionAnswer;
+    this.HTMLImageClassQuestionCard = value.HTMLImageClassQuestionCard;
+    this.HTMLContainerIDQuestionCardsTopLevel = value.HTMLContainerIDQuestionCardsTopLevel;
+  },
+
+  insertCard() {
+    cardContainerHTML = document.getElementById(this.HTMLContainerIDQuestionCardsTopLevel);
+    cardContainerHTML.insertAdjacentHTML("beforeend", this.card);
+
+    document.getElementById("button-A" + this.questionIndex.toString()).addEventListener('click', this.buttonAOptionFunc);
+    document.getElementById("button-B" + this.questionIndex.toString()).addEventListener('click', this.buttonBOptionFunc);
+    document.getElementById("button-C" + this.questionIndex.toString()).addEventListener('click', this.buttonCOptionFunc);
+    document.getElementById("button-D" + this.questionIndex.toString()).addEventListener('click', this.buttonDOptionFunc);
+    document.getElementById("check-answer" + this.questionIndex.toString()).addEventListener('click', this.buttonCheckAnswerFunc);
+  },
+
+};
+//////////////////////////////////////////////////
+
+///////////////// DATA ITEMS ////////////////
+// this object represent the QUESTION cards for WEB UI
+function QuestionCardData() {
+
+  this.getData = function (databaseRef, key)  {
+    return getFirebaseData(databaseRef, key)
+  }
+
+  this.arrangeData = async function (data) {
+    const arrangedData = []
+    const storage = firebase.storage();
+    let questionIndex = 0
+
+    for (let key in data) {
+      const gsReferenceQuestionImage = storage.refFromURL("gs://lingomoo.appspot.com/images/" + data[key]['file_name']+'.jpg');
+      const cardData = {}
+
+      cardData['questionIndex'] = questionIndex
+      cardData['questionCorrectAnswer'] = data[key]['correct_answer']
+      cardData['questionUserAnswer'] = ""
+      cardData['questionArticleUrl'] = data[key]['article_url']
+      cardData['questionImageUrl'] = await gsReferenceQuestionImage.getDownloadURL();
+      cardData['questionFileName'] = data[key]['file_name']
+      cardData['HTMLContainerIDQuestionCardsTopLevel'] = "question-cards"
+      cardData['HTMLImageStyleCross'] = ""
+      cardData['HTMLImageStyleTick'] = ""
+      cardData['HTMLButtonGroupStyleQuestionOptions'] = ""
+      cardData['HTMLButtonStyleCheckQuestionAnswer'] = ""
+      cardData['HTMLImageClassQuestionCard'] = "card-img-top"
+      arrangedData.push(cardData)
+      questionIndex += 1
+      totalQuestionCount = questionIndex
+    }
+    return arrangedData
+  }
+}
+// this object represent the PROGRESS BAR for WEB UI
+function ProgressBarData() {
+
+  this.getProgressBarData = function ()  {
+    return {percentageCorrectAnswer: Math.round((countCorrectAnswer/totalQuestionCount) * 100),
+            percentageWrongAnswer:  Math.round((countWrongAnswer/totalQuestionCount) * 100),
+            countCorrectAnswer : countCorrectAnswer,
+            countWrongAnswer: countWrongAnswer,
+            totalQuestionCount: totalQuestionCount,
+            HTMLContainerIDProgressbar: 'progress-bar'
+    }
+  }
+}
+// this object represent the WORKSHET TITLE for WEB UI
+function WorksheetTitleData() {
+
+  this.getWorksheetTitleData = function ()  {
+    return {
+            worksheetName: WSname,
+            worksheetTag1: tag1,
+            worksheetTag2: tag2,
+            countAnsweredQuestion: UIDisplayProgressBar.countWrongAnswer + UIDisplayProgressBar.countCorrectAnswer,
+            totalQuestionCount: UIDisplayProgressBar.totalQuestionCount,
+            HTMLContainerIDWorksheetTitle: 'worksheet-title'
+    }
+  }
+}
+////////////////////////////////////////////////
+
+
+///////////// Insert Worksheet Title /////////////
+const studyViewPageWTData = new UIData();
+const studyViewPageWorksheetTitleData = new WorksheetTitleData();
+ 
+studyViewPageWTData.setStrategy(studyViewPageWorksheetTitleData)
+UIDisplayWorksheetTitle.worksheetTitle = studyViewPageWTData.getWorksheetTitleData();
+UIDisplayWorksheetTitle.insertWorksheetTitle();
+//////////////////////////////////////////////////
+
+///////////////// Insert Progress Bar ///////////
+const studyViewPagePBData = new UIData();
+const studyViewPageProgressBarData = new ProgressBarData();
+
+studyViewPagePBData.setStrategy(studyViewPageProgressBarData)
+UIDisplayProgressBar.progressBar = {percentageCorrectAnswer: 0,
+    percentageWrongAnswer: 0,
+    countCorrectAnswer : 0,
+    countWrongAnswer: 0,
+    totalQuestionCount: 0,
+    HTMLContainerIDProgressbar: 'progress-bar'
+}
+UIDisplayProgressBar.insertProgressBar();
+////////////////////////////////////////////////
+
+
+function createQuestionCards() {
+
+
+
+  $("#card-cont").empty();
+
+
+  increaseWorksheetViewCount(key);
+
+  //cardContainer = document.getElementById("card-cont");
+
+  ///////////////// Insert Question Cards ///////////
+  const studyViewPageUiData = new UIData();
+  const studyViewPageQuestionCardData = new QuestionCardData();
+  studyViewPageUiData.setStrategy(studyViewPageQuestionCardData)
+  studyViewPageUiData.getData("worksheets/", key).then(result => {
+    const storage = firebase.storage();
+    const user = firebase.auth().currentUser
+    const arrangedData = studyViewPageUiData.arrangeData(result)
+    
+    arrangedData.then((result) => {result.forEach(async function (cardData, index) {
+      const userAnswer = await getAnsweredQuestionData(cardData['questionFileName'], user.uid)
+      
+      if (userAnswer) {
+        const imageDisplay = await setHTMLStyleForTickCross(userAnswer)
+        cardData['HTMLImageStyleTick'] = imageDisplay[0]
+        cardData['HTMLImageStyleCross'] = imageDisplay[1]
+
+        const gsReferenceAnswerImage = storage.refFromURL("gs://lingomoo.appspot.com/images/" + cardData['questionFileName'].replace("question", "answer") + '.jpg');
+        cardData['questionImageUrl'] = await gsReferenceAnswerImage.getDownloadURL()
+        cardData['HTMLImageClassQuestionCard'] = "card-img answered"
+        cardData['HTMLButtonGroupStyleQuestionOptions'] = "display:none;"
+        cardData['HTMLButtonStyleCheckQuestionAnswer'] = "display:none;"
+      } else {}
+
+      UIDisplayQuestionCard.card = cardData;
+      UIDisplayQuestionCard.insertCard();
+      updateTitleAndProcessBar();
+      })
+    })
+  })
+  ////////////////////////////////////////////////
+
+//displayWorksheetProgress();
+
+      //let intToletter = "";
+      //if (result["user_answer"] == 0) {
+      //  intToletter = "A";
+     // }
+     // if (result["user_answer"] == 1) {
+     //   intToletter = "B";
+     // }
+     // if (result["user_answer"] == 2) {
+     //   intToletter = "C";
+     // }
+     // if (result["user_answer"] == 3) {
+      //  intToletter = "D";
+     // }
+
+      //let data_info = document.createElement("div");
+      //data_info.className = "date-on-card";
+      //data_info.innerHTML =
+      //  "Your Answer - " +
+      //  intToletter +
+      //  "<br>" +
+      //  "Studied at " +
+      //  dataFinal[i][1]["date"];
+      //card_front.appendChild(data_info);
+
+
+
+}
+
+createQuestionCards();
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip();
 });
-
-
-function findWSname(text) {
-  var myRe = "___(.+?)!!";
-  return text.match(myRe)[1];
-}
-
-function findWStag1(text) {
-  var myRe = "_!!(.+?)::";
-  return text.match(myRe)[1];
-}
-
-function findWStag2(text) {
-  var myRe = "::(.+?)_";
-  return text.match(myRe)[1];
-}
-
-function findWSdate(text) {
-  var myRe = "(.+?)__";
-  return text.match(myRe)[1];
-}
-
-function findWScreator(text) {
-  var myRe = "__(.+?)___";
-  return text.match(myRe)[1];
-}
-
-function findWSquestioncount(text) {
-  var myRe = "!!(.+?)_!!";
-  return text.match(myRe)[1];
-}
-
-// This function creates the cards
-// This function is called by queryDatabase function with data for every card
-let createTaskCard = (correct_answer, article_url, url, fl) => {
-
-  let card_flip = document.createElement("div");
-  card_flip.className = "card questions";
-
-  let card_body = document.createElement("div");
-  card_body.className = "card-body";
-
-  let card_front = document.createElement("div");
-  card_front.className = "card-img-top";
-
-  let cardImage_back = document.createElement("img");
-  cardImage_back.className = "card-img-top";
-  cardImage_back.src = "";
-  cardImage_back.id = "card-back";
-
-  let cardImage_front = document.createElement("img");
-  cardImage_front.className = "card-img-top";
-  cardImage_front.src = url;
-
-  url_list.push(url);
-
-  cardImage_front.id = fl;
-
-  let correct_img = document.createElement("img");
-  correct_img.className = "correct-img";
-  correct_img.src = "assets/img/correct.png";
-
-  let wrong_img = document.createElement("img");
-  wrong_img.className = "wrong-img";
-  wrong_img.src = "assets/img/wrong.png";
-
-  let button_group = document.createElement("div");
-  button_group.className = "btn btn-group";
-  var attr_grp = document.createAttribute("role");
-  attr_grp.value = "group";
-
-  let button_A = document.createElement("button");
-  button_A.setAttribute("role", "button");
-  button_A.setAttribute("class", "btn btn-primary btn-sm");
-  button_A.textContent = "A";
-
-  let button_B = document.createElement("button");
-  button_B.setAttribute("type", "button");
-  button_B.setAttribute("class", "btn btn-primary btn-sm");
-  button_B.textContent = "B";
-
-  let button_C = document.createElement("button");
-  button_C.setAttribute("type", "button");
-  button_C.setAttribute("class", "btn btn-primary btn-sm");
-  button_C.textContent = "C";
-
-  let button_D = document.createElement("button");
-  button_D.setAttribute("type", "button");
-  button_D.setAttribute("class", "btn btn-primary btn-sm");
-  button_D.textContent = "D";
-
-  button_A.onclick = function () {
-    console.log("ButtonA");
-    correct_answer_GLOBAL = 0;
-  };
-
-  button_B.onclick = function () {
-    console.log("ButtonB");
-    correct_answer_GLOBAL = 1;
-  };
-
-  button_C.onclick = function () {
-    console.log("ButtonC");
-    correct_answer_GLOBAL = 2;
-  };
-
-  button_D.onclick = function () {
-    console.log("ButtonD");
-    correct_answer_GLOBAL = 3;
-  };
-
-  button_group.appendChild(button_A);
-  button_group.appendChild(button_B);
-  button_group.appendChild(button_C);
-  button_group.appendChild(button_D);
-
-  card_front.appendChild(button_group);
-
-  let butt_link = document.createElement("a");
-  butt_link.innerText = '';
-  butt_link.className = "url btn btn-warning btn-sm bx bx-news";
-  butt_link.id = "article_url" + count.toString();
-
-  var attr1 = document.createAttribute("data-toggle");
-  attr1.value = "tooltip";
-
-  var attr2 = document.createAttribute("data-placement");
-  attr2.value = "top";
-
-  var attr3 = document.createAttribute("title");
-  attr3.value = "Read the News Article";
-
-  var attr4 = document.createAttribute("href");
-  attr4.value = article_url;
-
-  var attr5 = document.createAttribute("target");
-  attr5.value = "_blank";
-
-  butt_link.setAttributeNode(attr1);
-  butt_link.setAttributeNode(attr2);
-  butt_link.setAttributeNode(attr3);
-  butt_link.setAttributeNode(attr4);
-  butt_link.setAttributeNode(attr5);
-
-  let butt = document.createElement("a");
-  butt.innerText = "";
-  butt.className = "btn btn-warning btn-sm bx bx-right-arrow-circle";
-  butt.id = "check_answer" + count.toString();
-  var attr1 = document.createAttribute("data-toggle");
-  attr1.value = "tooltip";
-
-  var attr2 = document.createAttribute("data-placement");
-  attr2.value = "top";
-
-  var attr3 = document.createAttribute("title");
-  attr3.value = "Check the Answer";
-
-  var attr4 = document.createAttribute("correct-answer");
-  attr4.value = correct_answer;
-
-  butt.setAttributeNode(attr1);
-  butt.setAttributeNode(attr2);
-  butt.setAttributeNode(attr3);
-  butt.setAttributeNode(attr4);
-
-  $("#check_answer" + (count - 1).toString()).tooltip("enable");
-  $("#article_url" + (count - 1).toString()).tooltip("enable");
-
-  count = count + 1;
-  WStotal +=1
-
-  butt.onclick = function () {
-    console.log($(this).attr("correct-answer"));
-    console.log($(this).get(0).id);
-    console.log(correct_answer_GLOBAL);
-
-    id_value = $(this).get(0).id;
-
-    add_question_answered(
-      $(this).siblings(".card-img-top").attr("id"),
-      $(this).attr("correct-answer"),
-      correct_answer_GLOBAL
-    );
-
-    if ($(this).attr("correct-answer") == correct_answer_GLOBAL) {
-      console.log("dogru");
-      $(this).siblings(".correct-img").show();
-      WScorrect +=1;
-      writeProgressData();
-
-    } else {
-      console.log("yaanlisss");
-      $(this).siblings(".wrong-img").show();
-      WSwrong +=1;
-      writeProgressData();
-    }
-
-    $(this).siblings(".btn-group").remove();
-
-    getAnswer(
-      $(this).siblings(".card-img-top").attr("id"),
-      $(this).siblings(".card-img-top")
-    );
-
-    console.log(id_value);
-    $("#" + id_value).tooltip("hide");
-    $("#" + id_value).remove();
-  };
-
-  card_flip.appendChild(card_front);
-  card_front.appendChild(cardImage_front);
-
-  card_front.appendChild(butt);
-  card_front.appendChild(butt_link);
-  card_front.appendChild(correct_img);
-  card_front.appendChild(wrong_img);
-
-  console.log(cardContainer)
-  cardContainer.appendChild(card_flip);
-
-  for (let i = 0; i < dataFinal.length; i++) {
-    if (dataFinal[i][0] + ".jpg" == fl) {
-      console.log("cevaplanmis soru:" + fl);
-      correct_answer_GLOBAL = dataFinal[i][1]["user_answer"];
-
-      if (dataFinal[i][1]["correct_answer"] == correct_answer_GLOBAL) {
-        console.log("dogru");
-        WScorrect +=1;
-        console.log(WScorrect);
-        $("#check_answer" + (count - 1).toString())
-          .siblings(".correct-img")
-          .show();
-      } else {
-        console.log("yaanlisss");
-        WSwrong +=1;
-        console.log(WSwrong);
-        $("#check_answer" + (count - 1).toString())
-          .siblings(".wrong-img")
-          .show();
-      }
-
-      writeProgressData();
-
-      var intToletter = "";
-      if (dataFinal[i][1]["user_answer"] == 0) {
-        intToletter = "A";
-      }
-      if (dataFinal[i][1]["user_answer"] == 1) {
-        intToletter = "B";
-      }
-      if (dataFinal[i][1]["user_answer"] == 2) {
-        intToletter = "C";
-      }
-      if (dataFinal[i][1]["user_answer"] == 3) {
-        intToletter = "D";
-      }
-
-      let data_info = document.createElement("div");
-      data_info.className = "date-on-card";
-      data_info.innerHTML =
-        "Your Answer - " +
-        intToletter +
-        "<br>" +
-        "Studied at " +
-        dataFinal[i][1]["date"];
-      card_front.appendChild(data_info);
-
-      getAnswer(
-        $("#check_answer" + (count - 1).toString())
-          .siblings(".card-img-top")
-          .attr("id"),
-        $("#check_answer" + (count - 1).toString()).siblings(".card-img-top")
-      );
-      $("#check_answer" + (count - 1).toString())
-        .siblings(".btn-group")
-        .remove();
-      $("#check_answer" + (count - 1).toString()).remove();
-    }
-  }
-};
-
-function writeProgressData() {
-  if (WStotal !== 0) {
-    Cper = (WScorrect/WStotal_cursor)*100
-  }
-  else {
-    Cper = 0
-  }
-
-  if (WSwrong !== 0) {
-    Wper = (WSwrong/WStotal_cursor)*100
-  }
-  else {
-    Wper = 0
-  }
-
-$('#Pcorrect').attr('style','width: '+ Cper + '%');
-$('#Pwrong').attr('style','width: '+ Wper + '%');
-
-$("#Pcorrect").html(Math.round((WScorrect/WStotal)*100) + "%")
-$("#Pwrong").html(Math.round((WSwrong/WStotal)*100) + "%")
-
-$("#progress_label").html("<i class='bx bx-trending-up' ></i>" + " " + (WScorrect + WSwrong) + " of " + WStotal_cursor + " is completed")  
-
-};
-
-
-let createWSCard = (WSname, WSdate, WScreator, key, QuestionCount, tag1, tag2, wscardcount) => {
-  console.log(WScreator)
-  let div_01 = document.createElement("div");
-  div_01.className = "col-6 mb-3";
-   
-  let div_02 = document.createElement("div");
-  div_02.className = "card ws p-3 mb-1";
-
-  let div_03 = document.createElement("div");
-  div_03.className = "d-flex justify-content-between";
-
-  let div_04 = document.createElement("div");
-  div_04.className = "d-flex flex-row align-items-center";
-
-  let div_05 = document.createElement("div");
-  div_05.className = "icon";
-
-  let i_01 = document.createElement("img");
-  i_01.className = "card-img-top rounded";
-  
-  i_01.src = "/img/user-circle-solid.svg" 
-  i_01.style.height = '40px';
-  i_01.style.width = '40px';
-
-  let div_06 = document.createElement("div");
-  //div_06.className = "badge";
-
-  let div_006 = document.createElement("div");
-  div_006.className = "mx-2 c-details";
-
-  let h6_01 = document.createElement("h6");
-  h6_01.className = "mb-0";
-  h6_01.id = "WScreator";
-  h6_01.innerHTML = WScreator;
-
-  let span_01 = document.createElement("span");
-  span_01.className = "text1 text-muted mb-2";
-  span_01.id = "WSdate";
-  span_01.innerHTML = WSdate;
-
-  let div_07 = document.createElement("div");
-  div_07.className = "mt-5";
-
-  let h3_01 = document.createElement("h3");
-  h3_01.className = "heading";
-  h3_01.id = "WSname";
-  h3_01.innerHTML = WSname
-
-  let div_08 = document.createElement("div");
-  div_08.className = "d-flex align-items-center";
-
-  let div_09 = document.createElement("div");
-  div_09.className = "progress";
-
-  let div_10 = document.createElement("div");
-  div_10.className = "progress-bar";
-
-  var attr1 = document.createAttribute("role");
-  attr1.value = "progressbar";
-
-  var attr2 = document.createAttribute("style");
-  attr2.value = "width: 50%";
-
-  var attr3 = document.createAttribute("aria-valuenow");
-  attr3.value = "10";
-
-  var attr4 = document.createAttribute("aria-valuemin");
-  attr4.value = "0";
-
-  var attr5 = document.createAttribute("aria-valuemax");
-  attr5.value = "100";
-
-  div_10.setAttributeNode(attr1);
-  div_10.setAttributeNode(attr2);
-  div_10.setAttributeNode(attr3);
-  div_10.setAttributeNode(attr4);
-  div_10.setAttributeNode(attr5);
-
-  let div_11 = document.createElement("div");
-  div_11.className = "mr-auto mt-2";
-
-  let div_12 = document.createElement("div");
-  let a_add = document.createElement("a");
-  a_add.className = 'bx bx-purchase-tag-alt';
- 
-  let span_05 = document.createElement("span");
-  span_05.className = "text2 text-muted pull-right";
-
-  span_05.innerHTML = " " + tag1 + " - " + tag2
-
-  let span_02 = document.createElement("span");
-  span_02.className = "text1 text-muted pull-right";
-  span_02.innerHTML = QuestionCount + " questions"
-
-  let span_03 = document.createElement("span");
-  span_03.className = "text2";
-  span_03.innerHTML = ""
-
-  let button_get = document.createElement("a");
-  button_get.setAttribute("role", "button");
-  button_get.setAttribute("class", "stretched-link");
-  button_get.setAttribute("id", "data-ref");
-
-  var attr_data = document.createAttribute("data-ref");
-  attr_data.value = key;
-
-
-  button_get.setAttributeNode(attr_data);
-
-
-  into = document.querySelector('#into')
-
-  into.appendChild(div_01);
-  div_01.appendChild(div_02);
-  
-  div_02.appendChild(div_03);
-  div_03.appendChild(div_04)
-  
-  div_04.appendChild(div_05)
-  div_05.appendChild(i_01)
-  div_11.appendChild(span_02)
-  
-  div_04.appendChild(button_get);
-  
-  div_02.appendChild(div_07);
-  
-  div_03.appendChild(div_06)
-  div_006.appendChild(h6_01)
-  div_04.appendChild(div_006)
-  
-  div_07.appendChild(h3_01);
-  div_07.appendChild(div_08);
-
-  div_12.appendChild(a_add);
-
-  div_08.appendChild(div_11);
-  div_08.appendChild(div_12);
-  div_08.appendChild(span_05);
-  div_06.appendChild(span_01);
-  span_02.appendChild(span_03);
-
-  WStotal = 0
-  WScorrect = 0
-  WSwrong = 0
-
-
-};
-
-var viewNumber = 0
-
-function increaseWsView(key) {
-  firebase.database().ref('worksheets-statistics/' + key).once("value").then((snap) => {
-    snap.forEach((data) => {
-      console.log('inside the statistics')
-        console.log(data.val())
-        console.log(data.key)
-        viewNumber = parseInt(data.val())
-        writeIncreasedViewNumber (key, viewNumber)
-    });
-});
-}
-
-function writeIncreasedViewNumber(key, viewNumber) {
-  console.log('inside writte the statistics')
-  console.log(viewNumber)
-
-  firebase.database().ref('worksheets-statistics/' + key).set({
-      view: viewNumber + 1
-  
-  }, function (error) {
-      if (error) {
-      } else {
-        $("#ws_view").html(("<i class='bx bx-show'></i>") + " " + ( viewNumber + 1) + ' views ')  
-      }
-  });
-}
-
-function getWSdata() {
-
-  var data = "";
-  let WSuserid = "";
-  var dbref = firebase.database().ref("/worksheets").limitToLast(6);
-
-  dbref.once("value").then((snap) => {
-      // store data in array so it's ordered
-     
-      wscardcount = 0
-      snap.forEach((ss) => {
-          wscardcount += 1
-
-          WSuserid = findWScreator(ss.key)
-          var db = firebase.database().ref("/users" + "/" + WSuserid).limitToFirst(1);
-          console.log(WSuserid)
-
-          db.once("value").then((snap) => {
-              snap.forEach((tt) => {
-                  console.log(tt.val())
-                  console.log(tt.key)
-                  data = tt.val()    
-                  createWSCard(findWSname(ss.key), timeSince(findWSdate(ss.key)), data, ss.key, findWSquestioncount(ss.key), findWStag1(ss.key), findWStag2(ss.key), wscardcount) 
-                  if (wscardcount == 6) {
-                    //document.getElementById("data-ref").click(); 
-                }
-              });
-          });
-          
-      });
-  });
-
-
-}
-
-function create_question_cards() {
-
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const params = Object.fromEntries(urlSearchParams.entries());
-
-    
-    var fields = params['worksheetName'].split('&');
-    console.log(fields)
-
-    var key = fields['0'] 
-    var WSname = fields['1'].split('=')[1]
-    var tag1 = fields['2'].split('=')[1]
-    var tag2 = fields['3'].split('=')[1] 
-
-    console.log(key)
-    console.log(WSname)
-    writeProgressData()
-
-
-
-    $("#card-cont").empty();
-    $("#study_label").html("<i class='bx bx-id-card' ></i>" + " " + WSname)  
-    $("#librarySaveButton").attr('data-ref', key)
-
-    $("#tags_label").html("<i class='bx bx-purchase-tag-alt'></i>" + " " + tag1 + " - " + tag2)  
-
-    console.log('increaseWs')
-    increaseWsView(key)
-    
-    var db_WS = firebase.database().ref("worksheets/" + key);
-    reset_cursor_params(db_WS);
-    const cursor_ws = new Cursor(db_WS, 25);
-    initListOfTasks(3, cursor_ws);
-    console.log('first clock')
-    console.log(first_click)
-    if (first_click !== 0){
-        $("html, body").animate({scrollTop: $("#question-pane").offset().top - 20,},500);
-    }
-    
-};
-
-create_question_cards()
-
 

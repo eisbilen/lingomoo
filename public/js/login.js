@@ -1,6 +1,40 @@
 var uid;
 //var dbref = firebase.database().ref("users/' + uid + '/worksheet").orderByKey();
 
+// this is a strategy pattern function
+// sets the strategies for dispaling data on browser
+// setStrategy function sets the strategy for different UIData items
+// getData functions get the un arranged data fron the firebase database
+// arrangeData function gets the database objects and arrange them for  UIDisplay objects
+function UIData() {
+    this.dataType = ""
+  
+    this.setStrategy = (dataType) => {
+      this.dataType = dataType
+    }
+  
+    this.getDataWithLimitToLast = (databaseRef,limitToLastValue) => {
+      return this.dataType.getDataWithLimitToLast(databaseRef, limitToLastValue)
+    }
+
+    this.getData = (databaseRef,key) => {
+        return this.dataType.getData(databaseRef, key)
+    }
+
+    this.getProgressBarData = () => {
+        return this.dataType.getProgressBarData()
+    }
+
+    this.getWorksheetTitleData = () => {
+        return this.dataType.getWorksheetTitleData()
+    }
+  
+    this.arrangeData = data => {
+      return this.dataType.arrangeData(data)
+    }
+  }
+
+
 // this function 
 function login() {
     var provider = new firebase.auth.GoogleAuthProvider();
@@ -73,7 +107,7 @@ function removeSingleWSItem(file_name){
         });
 }
 
-function writeIncreasedViewNumber(key, viewNumber) {
+function writeViewCountToFirebase(key, viewNumber) {
     console.log('inside writte the statistics')
     console.log(viewNumber)
   
@@ -134,7 +168,7 @@ function writeSingleWS(wsname, key, data, wsdatetime, tag1, tag2) {
     });
 
     // creates an emty node with zero values in the statistices node for new worksheet
-    writeIncreasedViewNumber( (wsdatetime + "__" + uid + "___" + wsname + "!!" + count + "_!!" + tag1 + "::" + tag2 + "_") , 0) 
+    writeViewCountToFirebase( (wsdatetime + "__" + uid + "___" + wsname + "!!" + count + "_!!" + tag1 + "::" + tag2 + "_") , 0) 
 }
 
 // adds one single question data into the users/uid/my-library folder
@@ -256,7 +290,7 @@ function getUserfromDatabase(uid, displayName, email, photoURL) {
     });
 }
 
-function add_question_answered(file_name, correct_answer, user_answer) {
+function addUserQuestionAnswered(file_name, correct_answer, user_answer) {
     var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
     var today = new Date();
 
@@ -268,17 +302,7 @@ function add_question_answered(file_name, correct_answer, user_answer) {
     });
 }
 
-return_questions_answered = async function () {
 
-    var ref = firebase.database().ref('users/' + uid + '/questions-answered/')
-
-    try {
-        var snapshot = await ref.once("value");
-        return snapshot.val();
-    }
-    catch (errorObject) {
-    }
-}
 
 $(document).ready(function () {
     console.log("document loaded");

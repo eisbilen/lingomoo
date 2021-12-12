@@ -8,7 +8,7 @@ var ws_question_list = [];
 let cardContainer;
 var filename_answer = ' ';
 var count = 0;
-correct_answer_GLOBAL = 0;
+userAnswerGLOBAL = 0;
 
 var dbref = firebase.database().ref("/questions_cat/VERB").orderByKey();
 const cursor = new Cursor(dbref, 9);
