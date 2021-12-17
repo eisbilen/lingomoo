@@ -1,13 +1,4 @@
 var uid;
-//var dataObject = [];
-//var dataObject2 = [];
-//var dataFinal = [];
-//var url_list = [];
-//var img_list = [];
-//var userID = "";
-//let cardContainer;
-//var filename_answer = " ";
-
 
 function findWSname(text) {
   var myRe = "___(.+?)!!";
@@ -53,17 +44,25 @@ async function snapshotToArray(snapshot) {
 // this is a general utility function that uses 'databaseRef' and 'limitToLastValue' for firebase database query
 // and returns the result of query as objects with key value pairs 
 async function getFirebaseDataWithLimitToLast(databaseRef, limitToLastValue){
-  const response = await firebase.database().ref(databaseRef).limitToLast(limitToLastValue).once("value").then((snap) =>  {
-      return snap
-  });
+  const response = await firebase.database().ref(databaseRef).limitToLast(limitToLastValue).once("value").then((snap) =>  {return snap});
   return await snapshotToArray(response)
 }
 
 async function getFirebaseData(databaseRef, key){
-  const response = await firebase.database().ref(databaseRef + key).once("value").then((snap) =>  {
-      return snap
-  });
+  const response = await firebase.database().ref(databaseRef + key).once("value").then((snap) =>  {return snap});
   return await snapshotToArray(response)
+}
+
+async function getQuestionCount(databaseRef, key){
+  const response = await firebase.database().ref(databaseRef + key).once("value").then((snap) =>  {return snap});
+  return await snapshotToArray(response)
+}
+
+async function getFirebaseDataWithPagination(cursor, button){
+  let response
+  if (button=='next') {response = cursor.next().then((data) => {return data;});}
+  if (button=='previous') {response = cursor.previous().then((data) => {return data;});}
+  return await response;
 } 
 
 
@@ -284,8 +283,6 @@ let initListOfTasks = (getData, cursor) => {
   if (getData == 0 || getData == 1) {
     getFilterData(dbref);
   }
-
-  // handle next page requests
  
   $("#next-button").click((e) => {
     e.preventDefault();

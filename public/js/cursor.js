@@ -12,7 +12,6 @@ class Cursor {
     //database referance node
     this.baseRef = baseRef;
     
-   
     // These defines from where the data retrival starts and ends
     this.firstKey = null;
     this.lastKey = null;
@@ -73,16 +72,12 @@ class Cursor {
         data.push(ss.val());
         keys.push(ss.key);
       });
-      console.log("data.length");
-      console.log(data.length);
-      totalQuestionCount_cursor = data.length;
 
       if (data.length == 1 && this.firstIndex != 1) {
         this.lastRecord = 1;
         return null;
       }
 
-      console.log(data);
       if (this.lastKey !== null) {
         // skip the first value, which is actually the cursor
         keys.pop();
@@ -101,7 +96,6 @@ class Cursor {
         }
 
         const last = data.length - 1;
-        console.log(data.length);
 
         // if there is less data than than the pagesize, it means that we are at the last page, we cannot paginate further
         if (data.length < this.pageSize) {
@@ -115,14 +109,7 @@ class Cursor {
         if (this.databaseLastKey == null) {
           this.databaseLastKey = this.lastKey;
         }
-
-        console.log("first key");
-        console.log(this.firstKey);
-        console.log("LAST key");
-        console.log(this.lastKey);
       }
-
-      console.log(data);
       return data;
     });
   }

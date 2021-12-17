@@ -21,12 +21,29 @@ function UIData() {
         return this.dataType.getData(databaseRef, key)
     }
 
+    this.getQuestionCount = (databaseRef,key) => {
+        return this.dataType.getQuestionCount(databaseRef, key)
+    }
+
+    this.getDataWithPagination = (cursor, button) => {
+        console.log(button)
+        return this.dataType.getDataWithPagination(cursor, button)
+    }
+
+    this.createQuestionCards = (result) => {
+        return this.dataType.createQuestionCards(result)
+    }
+
     this.getProgressBarData = () => {
         return this.dataType.getProgressBarData()
     }
 
     this.getWorksheetTitleData = () => {
         return this.dataType.getWorksheetTitleData()
+    }
+
+    this.getPaginationData = () => {
+        return this.dataType.getPaginationData()
     }
   
     this.arrangeData = data => {
@@ -329,7 +346,6 @@ $(document).ready(function () {
       $('#logout').click (function (e) {
         e.preventDefault(); 
         logout()
-        
       });
 
 //  document.getElementById("data-ref").click(); 

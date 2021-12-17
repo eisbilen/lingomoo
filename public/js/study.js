@@ -30,12 +30,12 @@ const UIDisplayWorkSheetCard = {
           <h3 class="heading" id="WSname">${this.name}</h3>
           <div class="d-flex align-items-center">
             <div class="mr-auto mt-2">
-              <span class="text1 text-muted pull-right">${this.questionCount} questions<span class="text2"></span></span>
+              <span class="text2 text-muted pull-right">${this.questionCount} questions<span class="text2"></span></span>
             </div>
             <div>
-              <a class="bx bx-purchase-tag-alt"></a>
+              <a class="bx bx-purchase-tag-alt"> </a>
             </div>
-            <span class="text2 text-muted pull-right">${this.tagPrimary} - ${this.tagSecondary}</span>
+            <span class="text2 text-muted pull-right"> ${this.tagPrimary} - ${this.tagSecondary}</span>
           </div>
         </div>
       </div>
@@ -84,7 +84,7 @@ function WorksheetCardData() {
       cardData['key'] = key;
       cardData['name'] = findWSname(key);
       cardData['dateCreated'] = timeSince(findWSdate(key));
-      cardData['creator'] = "Ben";
+      cardData['creator'] = findWScreator(key);
       cardData['questionCount'] = findWSquestioncount(key);
       cardData['HTMLContainerIDQuestionCardsTopLevel'] = 'into';
       cardData['tagPrimary'] = findWStag1(key);

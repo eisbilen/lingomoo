@@ -14,6 +14,10 @@ const key = fields["0"];
 const WSname = fields["1"].split("=")[1];
 const tag1 = fields["2"].split("=")[1];
 const tag2 = fields["3"].split("=")[1];
+
+const dbref = firebase.database().ref("/worksheets/" + key).orderByKey();
+const cursor = new Cursor(dbref, 6);
+
 //////////////////////////////////////////////////
 
 ///////////// UI DISPLAY ITEMS /////////////
@@ -31,7 +35,7 @@ const UIDisplayWorksheetTitle = {
 
   get worksheetTitle() {
     return `<div class="container d-flex align-items-center mt-5">
-              <h3 id="study_label" class="mr-auto text-left lingoo-statistics font-weight-light"><i class="bx bx-id-card"></i>${this.worksheetName}</h3>
+              <h3 id="study_label" class="mr-auto text-left lingoo-statistics font-weight-light"><i class="bx bx-id-card"></i> ${this.worksheetName}</h3>
               <h4 id="progress_label" class="mr-auto  text-center align-middle lingoo-statistics font-weight-light"><i class="bx bx-trending-up"></i> ${this.countAnsweredQuestion} of ${this.totalQuestionCount} is completed</h4>
               <h3 id="tags_label" class="text-rigth align-middle lingoo-statistics font-weight-light"><i class="bx bx-purchase-tag-alt"></i> ${this.worksheetTag1} - ${this.worksheetTag2}</h3>
             </div>`;
@@ -66,8 +70,8 @@ const UIDisplayProgressBar = {
   get progressBar() {
     return `<div>
               <div class="progress mb-5" style="max-width: 100%">
-                <div id="correct-answer" class="progress-bar bg-success progress-bar-stripped" style="width: ${this.percentageCorrectAnswer}%">${this.percentageCorrectAnswer}% - ${this.countCorrectAnswer}</div>
-                <div id="wrong-answer" class="progress-bar bg-danger progress-bar-stripped" style="width: ${this.percentageWrongAnswer}%">${this.percentageWrongAnswer}% - ${this.countWrongAnswer}</div>
+                <div id="correct-answer" class="progress-bar bg-success progress-bar-stripped" style="width: ${this.percentageCorrectAnswer}%">${this.percentageCorrectAnswer}% (${this.countCorrectAnswer})</div>
+                <div id="wrong-answer" class="progress-bar bg-danger progress-bar-stripped" style="width: ${this.percentageWrongAnswer}%">${this.percentageWrongAnswer}% (${this.countWrongAnswer})</div>
               </div>
             </div>`;
   },
@@ -185,31 +189,118 @@ const UIDisplayQuestionCard = {
     document.getElementById("check-answer" + this.questionIndex.toString()).addEventListener('click', this.buttonCheckAnswerFunc);
   },
 
-};
+}
+const UIDisplayPagination = {
+  HTMLButtonClassPreviousButton: "btn btn-primary",
+  HTMLButtonClassNextButton: "btn btn-primary",
+  HTMLContainerIDPagination: "pagination",
+  paginationCursor: Cursor,
+  paginationDatabaseRef: "",
+  paginationPageSize: 30,
+  paginationTotalCount: 0,
+
+  updatePaginationButtons: function () {
+
+    console.log("First Index  : " + this.paginationCursor.firstIndex)
+    console.log("Last Index   : " + this.paginationCursor.lastIndex)
+    console.log("Page Index   : " + this.paginationCursor.firstIndex)
+    console.log("Last Record  : " + this.paginationCursor.lastRecord)
+    console.log("Total Data Length  : " + this.paginationTotalCount)
+
+    if (this.paginationCursor.firstIndex == 1) {
+      $("#previous-button").addClass("disabled");
+    } else {
+      $("#previous-button").removeClass("disabled");
+    }
+
+    if (this.paginationCursor.lastRecord == 1) {
+      $("#next-button").addClass("disabled");
+    } else {
+      $("#next-button").removeClass("disabled");
+    }
+
+    if (this.paginationCursor.lastIndex == this.paginationTotalCount) {
+      $("#next-button").addClass("disabled");
+    }
+
+  },
+  //paginationMove: function (move) {studyViewPageUiData.getDataWithPagination(cursor,move).then(result => {studyViewPageUiData.createQuestionCards(result)});},
+  nextButtonFunc: (event) => {
+    event.preventDefault();
+    studyViewPageUiData.getDataWithPagination(cursor,'next').then(result => {
+      studyViewPageUiData.createQuestionCards(result)
+      UIDisplayPagination.updatePaginationButtons();
+    });
+  },
+
+  previousButtonFunc: (event) => {
+    event.preventDefault();
+    if (UIDisplayPagination.paginationCursor.firstIndex !== 1) {
+      studyViewPageUiData.getDataWithPagination(cursor,'previous').then(result => {
+        studyViewPageUiData.createQuestionCards(result)
+        UIDisplayPagination.updatePaginationButtons();
+      });
+    }  
+  },
+
+  get pagination() {
+    return `<div class="row">
+              <div class="col-6 text-center">
+                <a id="previous-button" class="${this.HTMLButtonClassPreviousButton}" href="#" role="button">Previous</a>
+              </div>
+              <div class="col-6 text-center">
+                <a id="next-button" class="${this.HTMLButtonClassNextButton}" href="#" role="button">Next</a>
+              </div>
+            </div>`;
+  },
+
+  set pagination(value) {
+    this.HTMLButtonClassPreviousButton = value.HTMLButtonClassPreviousButton;
+    this.HTMLButtonClassNextButton = value.HTMLButtonClassNextButton;
+    this.HTMLContainerIDPagination = value.HTMLContainerIDPagination;
+    this.paginationCursor = value.paginationCursor;
+    this.paginationDatabaseRef = value.paginationDatabaseRef;
+    this.paginationPageSize = value.paginationPageSize;
+  },
+
+  insertPagination() {
+    cardContainerHTML = document.getElementById(this.HTMLContainerIDPagination);
+    cardContainerHTML.insertAdjacentHTML("beforeend", this.pagination); 
+
+    document.getElementById("previous-button").addEventListener('click', this.previousButtonFunc);
+    document.getElementById("next-button").addEventListener('click', this.nextButtonFunc);
+  },
+}
 //////////////////////////////////////////////////
 
-///////////////// DATA ITEMS ////////////////
+/////////////////// DATA ITEMS ///////////////////
 // this object represent the QUESTION cards for WEB UI
 function QuestionCardData() {
+  
+  this.paginationCursor = function () {}
+
+  this.getQuestionCount = async function (databaseRef, key) {
+    return await getQuestionCount(databaseRef, key)
+  }
 
   this.getData = function (databaseRef, key)  {
     return getFirebaseData(databaseRef, key)
   }
-
+  
+  this.getDataWithPagination = function (cursor, button)  {
+    return getFirebaseDataWithPagination(cursor, button)
+  }
+  
   this.arrangeData = async function (data) {
     const arrangedData = []
-    const storage = firebase.storage();
     let questionIndex = 0
 
     for (let key in data) {
-      const gsReferenceQuestionImage = storage.refFromURL("gs://lingomoo.appspot.com/images/" + data[key]['file_name']+'.jpg');
       const cardData = {}
-
       cardData['questionIndex'] = questionIndex
       cardData['questionCorrectAnswer'] = data[key]['correct_answer']
       cardData['questionUserAnswer'] = ""
       cardData['questionArticleUrl'] = data[key]['article_url']
-      cardData['questionImageUrl'] = await gsReferenceQuestionImage.getDownloadURL();
       cardData['questionFileName'] = data[key]['file_name']
       cardData['HTMLContainerIDQuestionCardsTopLevel'] = "question-cards"
       cardData['HTMLImageStyleCross'] = ""
@@ -219,11 +310,43 @@ function QuestionCardData() {
       cardData['HTMLImageClassQuestionCard'] = "card-img-top"
       arrangedData.push(cardData)
       questionIndex += 1
-      totalQuestionCount = questionIndex
     }
+    totalQuestionCount = questionIndex;
     return arrangedData
   }
+  
+  this.createQuestionCards = async function (result) {
+    const storage = firebase.storage();
+    const user = firebase.auth().currentUser
+    const arrangedData = this.arrangeData(result)
+    document.getElementById('question-cards').innerHTML = "";
+    arrangedData.then((result) => {result.forEach(async function (cardData, index) {
+      const userAnswer = await getAnsweredQuestionData(cardData['questionFileName'], user.uid)
+      
+      if (userAnswer) {
+        const imageDisplay = await setHTMLStyleForTickCross(userAnswer)
+        cardData['HTMLImageStyleTick'] = imageDisplay[0]
+        cardData['HTMLImageStyleCross'] = imageDisplay[1]
+
+        const gsReferenceAnswerImage = storage.refFromURL("gs://lingomoo.appspot.com/images/" + cardData['questionFileName'].replace("question", "answer") + '.jpg');
+        cardData['questionImageUrl'] = await gsReferenceAnswerImage.getDownloadURL()
+        cardData['HTMLImageClassQuestionCard'] = "card-img answered"
+        cardData['HTMLButtonGroupStyleQuestionOptions'] = "display:none;"
+        cardData['HTMLButtonStyleCheckQuestionAnswer'] = "display:none;"
+      } 
+      else {
+        const gsReferenceQuestionImage = storage.refFromURL("gs://lingomoo.appspot.com/images/" + cardData['questionFileName']+'.jpg');
+        cardData['questionImageUrl'] = await gsReferenceQuestionImage.getDownloadURL();
+      }
+
+      UIDisplayQuestionCard.card = cardData;
+      UIDisplayQuestionCard.insertCard();
+      updateTitleAndProcessBar();
+      })
+    })
+  }
 }
+
 // this object represent the PROGRESS BAR for WEB UI
 function ProgressBarData() {
 
@@ -251,8 +374,20 @@ function WorksheetTitleData() {
     }
   }
 }
-////////////////////////////////////////////////
 
+function PaginationData() {
+
+  this.getPaginationData = function ()  {
+    return {
+            HTMLButtonClassPreviousButton: HTMLButtonClassPreviousButton,
+            HTMLButtonClassNextButton: HTMLButtonClassNextButton,
+            HTMLContainerIDPagination: HTMLContainerIDPagination,
+            paginationCursor: paginationCursor,
+            paginationDatabaseRef: paginationDatabaseRef,
+            paginationPageSize: paginationPageSize 
+    }
+  }
+}
 
 ///////////// Insert Worksheet Title /////////////
 const studyViewPageWTData = new UIData();
@@ -278,49 +413,34 @@ UIDisplayProgressBar.progressBar = {percentageCorrectAnswer: 0,
 UIDisplayProgressBar.insertProgressBar();
 ////////////////////////////////////////////////
 
+increaseWorksheetViewCount(key);
+//cardContainer = document.getElementById("card-cont");
 
-function createQuestionCards() {
+///////////////// Insert Question Cards ///////////
+const studyViewPageUiData = new UIData();
+const studyViewPageQuestionCardData = new QuestionCardData();
+studyViewPageUiData.setStrategy(studyViewPageQuestionCardData)
+//studyViewPageUiData.getDataWithPagination(cursor,'next').then(result => {studyViewPageUiData.createQuestionCards(result)});
+studyViewPageUiData.getData("/worksheets/", key).then(result => {studyViewPageUiData.createQuestionCards(result)});
 
+////////////////////////////////////////////////
 
+///////////////// Insert Pagination ///////////
+const studyViewPagePData = new UIData();
+const studyViewPagePaginationData = new PaginationData();
+studyViewPagePData.setStrategy(studyViewPagePaginationData)
+UIDisplayPagination.pagination = {  HTMLButtonClassPreviousButton: "btn btn-primary",
+                                    HTMLButtonClassNextButton: "btn btn-primary",
+                                    HTMLContainerIDPagination: "pagination",
+                                    paginationCursor: cursor,
+                                    paginationDatabaseRef: dbref,
+                                    paginationPageSize: 30,
+                                    paginationTotalCount: 0,
+                                  }
+getQuestionCount("/worksheets/", key).then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
+UIDisplayPagination.insertPagination();
+UIDisplayPagination.updatePaginationButtons();
 
-  $("#card-cont").empty();
-
-
-  increaseWorksheetViewCount(key);
-
-  //cardContainer = document.getElementById("card-cont");
-
-  ///////////////// Insert Question Cards ///////////
-  const studyViewPageUiData = new UIData();
-  const studyViewPageQuestionCardData = new QuestionCardData();
-  studyViewPageUiData.setStrategy(studyViewPageQuestionCardData)
-  studyViewPageUiData.getData("worksheets/", key).then(result => {
-    const storage = firebase.storage();
-    const user = firebase.auth().currentUser
-    const arrangedData = studyViewPageUiData.arrangeData(result)
-    
-    arrangedData.then((result) => {result.forEach(async function (cardData, index) {
-      const userAnswer = await getAnsweredQuestionData(cardData['questionFileName'], user.uid)
-      
-      if (userAnswer) {
-        const imageDisplay = await setHTMLStyleForTickCross(userAnswer)
-        cardData['HTMLImageStyleTick'] = imageDisplay[0]
-        cardData['HTMLImageStyleCross'] = imageDisplay[1]
-
-        const gsReferenceAnswerImage = storage.refFromURL("gs://lingomoo.appspot.com/images/" + cardData['questionFileName'].replace("question", "answer") + '.jpg');
-        cardData['questionImageUrl'] = await gsReferenceAnswerImage.getDownloadURL()
-        cardData['HTMLImageClassQuestionCard'] = "card-img answered"
-        cardData['HTMLButtonGroupStyleQuestionOptions'] = "display:none;"
-        cardData['HTMLButtonStyleCheckQuestionAnswer'] = "display:none;"
-      } else {}
-
-      UIDisplayQuestionCard.card = cardData;
-      UIDisplayQuestionCard.insertCard();
-      updateTitleAndProcessBar();
-      })
-    })
-  })
-  ////////////////////////////////////////////////
 
 //displayWorksheetProgress();
 
@@ -348,13 +468,4 @@ function createQuestionCards() {
       //  dataFinal[i][1]["date"];
       //card_front.appendChild(data_info);
 
-
-
-}
-
-createQuestionCards();
-
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip();
-});
 
