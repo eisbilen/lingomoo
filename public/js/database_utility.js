@@ -53,18 +53,18 @@ async function getFirebaseData(databaseRef, key){
   return await snapshotToArray(response)
 }
 
-async function getQuestionCount(databaseRef, key){
+async function getTotalCount(databaseRef, key){
   const response = await firebase.database().ref(databaseRef + key).once("value").then((snap) =>  {return snap});
   return await snapshotToArray(response)
 }
 
 async function getFirebaseDataWithPagination(cursor, button){
   let response
-  if (button=='next') {response = cursor.next().then((data) => {return data;});}
-  if (button=='previous') {response = cursor.previous().then((data) => {return data;});}
-  return await response;
-} 
-
+  if (button=='next') {response = await cursor.next().then((data) => {return data;});}
+  if (button=='previous') {response = await cursor.previous().then((data) => {return data;});}
+  return await response.snap
+  //return await snapshotToArray(response.snap)
+}
 
 // This funtion populates the button click events for the
 // Resets the cursor paramaters

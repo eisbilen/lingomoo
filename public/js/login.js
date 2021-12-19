@@ -30,9 +30,18 @@ function UIData() {
         return this.dataType.getDataWithPagination(cursor, button)
     }
 
-    this.createQuestionCards = (result) => {
-        return this.dataType.createQuestionCards(result)
+    //this.createQuestionCards = (result) => {
+    //    return this.dataType.createQuestionCards(result)
+    //}
+
+    //this.createWorksheetCards = (result) => {
+     ///   return this.dataType.createWorksheetCards(result)
+    //}
+
+    this.createCards = (result) => {
+        return this.dataType.createCards(result)
     }
+
 
     this.getProgressBarData = () => {
         return this.dataType.getProgressBarData()

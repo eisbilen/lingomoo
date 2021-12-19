@@ -49,7 +49,7 @@ class Cursor {
   // Starts from the end of the database and moves backwards to get always the latest items
   next() {
     let ref = this.baseRef;
-
+    console.log("page size:   " + this.pageSize)
     if (this.lastKey !== null) {
       // a previous page has been loaded so get the next one using the previous value/key
       // we have to start from the current cursor so add one to page size
@@ -110,7 +110,16 @@ class Cursor {
           this.databaseLastKey = this.lastKey;
         }
       }
-      return data;
+      console.log(keys)
+      console.log(data)
+
+      let resultObj =  data.reduce(function(result, field, index) {
+        result[keys[index]] = field;
+        return result;
+      }, {})
+
+
+      return {data: data, snap: resultObj};
     });
   }
 
@@ -118,7 +127,7 @@ class Cursor {
   // Moves forward to the latest item in the database
   previous() {
     let ref = this.baseRef;
-
+    console.log("page size:   " + this.pageSize)
     if (this.lastKey !== null) {
       // a previous page has been loaded so get the next one using the previous value/key
       // we have to start from the current cursor so add one to page size
@@ -157,7 +166,16 @@ class Cursor {
       }
       console.log(this.firstKey);
       console.log(this.lastKey);
-      return data;
+
+      console.log(keys)
+      console.log(data)
+
+      let resultObj =  data.reduce(function(result, field, index) {
+        result[keys[index]] = field;
+        return result;
+      }, {})
+      
+      return {data: data, snap: resultObj};
     });
   }
 }
