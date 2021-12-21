@@ -66,10 +66,56 @@ function QuestionCardData() {
   
         UIDisplayQuestionCard.card = cardData;
         UIDisplayQuestionCard.insertCard();
-        updateTitleAndProcessBar();
+        //updateTitleAndProcessBar();
         })
       })
     }
+}
+function QuestionWSCreationCardData() {
+
+  this.getQuestionCount = async function (databaseRef, key) {
+    return await getQuestionCount(databaseRef, key)
+  }
+
+  this.getData = function (databaseRef, key)  {
+    return getFirebaseData(databaseRef, key)
+  }
+  
+  this.getDataWithPagination = function (cursor, button)  {
+    return getFirebaseDataWithPagination(cursor, button)
+  }
+  
+  this.arrangeData = async function (data) {
+    const arrangedData = []
+    let questionIndex = 0
+
+    for (let key in data) {
+      const cardData = {}
+      cardData['questionIndex'] = questionIndex
+      cardData['questionArticleUrl'] = data[key]['article_url']
+      cardData['questionFileName'] = data[key]['file_name']
+      cardData['HTMLContainerIDQuestionCardsTopLevel'] = "question-cards"
+      cardData['HTMLImageClassQuestionCard'] = "card-img-top"
+      arrangedData.push(cardData)
+      questionIndex += 1
+    }
+    totalQuestionCount = questionIndex;
+    return arrangedData
+  }
+  
+  this.createCards = async function (result) {
+    const storage = firebase.storage();
+    const arrangedData = this.arrangeData(result)
+    document.getElementById('question-cards').innerHTML = "";
+    arrangedData.then((result) => {result.forEach(async function (cardData, index) {
+      const gsReferenceQuestionImage = storage.refFromURL("gs://lingomoo.appspot.com/images/" + cardData['questionFileName']+'.jpg');
+      cardData['questionImageUrl'] = await gsReferenceQuestionImage.getDownloadURL();
+    
+      UIDisplayQuestionWSCreationCard.card = cardData;
+      UIDisplayQuestionWSCreationCard.insertCard();
+      })
+    })
+  }
 }
 // this object represent the PROGRESS BAR for WEB UI
 function ProgressBarData() {

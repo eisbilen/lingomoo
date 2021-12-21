@@ -97,19 +97,23 @@ customElements.define(
     }
 
       this.$("#filter1").onclick = function () {
-        var db = firebase
-          .database()
-          .ref("/questions_cat/VERB/")
-          .orderByKey();
-        reset_cursor_params(db);
-        console.log("button");
-        $("#next-button").click();
+        UIDisplayPagination.paginationTotalCountDBREF = "/questions_cat/VERB"
+        dbref = firebase.database().ref(UIDisplayPagination.paginationTotalCountDBREF).orderByKey();
+        cursor = new Cursor(dbref, 9); 
+        reset_cursor_params(dbref);
+        UIDisplayPagination.paginationCursor = cursor;
+        cardUiData.getDataWithPagination(cursor,'next').then(result => {cardUiData.createCards(result)});
+        getTotalCount(UIDisplayPagination.paginationTotalCountDBREF, "").then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
+        UIDisplayPagination.insertPagination();
+        UIDisplayPagination.updatePaginationButtons();
+
+
 
         $("#pre-list").html("");
     
         removeAllChildNodes($("#pre-list"))
 
-        var dbref = firebase.database().ref("/questions/VERB").orderByKey();
+        dbref = firebase.database().ref("/questions/VERB").orderByKey();
         dbref.once("value").then((snap) => {
             const keys = [];
             const data = [];
@@ -130,16 +134,20 @@ customElements.define(
       };
 
       this.$("#filter2").onclick = function () {
-        var db = firebase
-          .database()
-          .ref("/questions_cat/NOUN/")
-          .orderByKey();
-        reset_cursor_params(db);
-        console.log("button");
-        $("#next-button").click();
+
+        UIDisplayPagination.paginationTotalCountDBREF = "/questions_cat/NOUN"
+        dbref = firebase.database().ref(UIDisplayPagination.paginationTotalCountDBREF).orderByKey();
+        cursor = new Cursor(dbref, 9);
+        reset_cursor_params(dbref);
+        UIDisplayPagination.paginationCursor = cursor;
+        cardUiData.getDataWithPagination(cursor,'next').then(result => {cardUiData.createCards(result)});
+        getTotalCount(UIDisplayPagination.paginationTotalCountDBREF, "").then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
+        UIDisplayPagination.insertPagination();
+        UIDisplayPagination.updatePaginationButtons();
+
 
         $("#pre-list").html("");
-        var dbref = firebase.database().ref("/questions/NOUN").orderByKey();
+        dbref = firebase.database().ref("/questions/NOUN").orderByKey();
         dbref.once("value").then((snap) => {
             const keys = [];
             const data = [];
@@ -160,16 +168,19 @@ customElements.define(
       };
 
       this.$("#filter3").onclick = function () {
-        var db = firebase
-          .database()
-          .ref("/questions_cat/ADJECTIVE/")
-          .orderByKey();
-        reset_cursor_params(db);
-        console.log("button");
-        $("#next-button").click();
+        UIDisplayPagination.paginationTotalCountDBREF = "/questions_cat/ADJECTIVE"
+        dbref = firebase.database().ref(UIDisplayPagination.paginationTotalCountDBREF ).orderByKey();
+        cursor = new Cursor(dbref, 9);
+        reset_cursor_params(dbref);
+        UIDisplayPagination.paginationCursor = cursor;
+        cardUiData.getDataWithPagination(cursor,'next').then(result => {cardUiData.createCards(result)});
+        getTotalCount(UIDisplayPagination.paginationTotalCountDBREF, "").then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
+        UIDisplayPagination.insertPagination();
+        UIDisplayPagination.updatePaginationButtons();
+
 
         $("#pre-list").html("");
-        var dbref = firebase.database().ref("/questions/ADJECTIVE").orderByKey();
+        dbref = firebase.database().ref("/questions/ADJECTIVE").orderByKey();
         dbref.once("value").then((snap) => {
             const keys = [];
             const data = [];
@@ -191,16 +202,19 @@ customElements.define(
       };
 
       this.$("#filter4").onclick = function () {
-        var db = firebase
-          .database()
-          .ref("/questions_cat/ADVERB/")
-          .orderByKey();
-        reset_cursor_params(db);
-        console.log("button");
-        $("#next-button").click();
+        UIDisplayPagination.paginationTotalCountDBREF = "/questions_cat/ADVERB"
+        dbref = firebase.database().ref(UIDisplayPagination.paginationTotalCountDBREF).orderByKey();
+        cursor = new Cursor(dbref, 9);
+        reset_cursor_params(dbref);
+        UIDisplayPagination.paginationCursor = cursor;
+        cardUiData.getDataWithPagination(cursor,'next').then(result => {cardUiData.createCards(result)});
+        getTotalCount(UIDisplayPagination.paginationTotalCountDBREF, "").then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
+        UIDisplayPagination.insertPagination();
+        UIDisplayPagination.updatePaginationButtons();
+
 
         $("#pre-list").html("");
-        var dbref = firebase.database().ref("/questions/ADVERB").orderByKey();
+        dbref = firebase.database().ref("/questions/ADVERB").orderByKey();
         dbref.once("value").then((snap) => {
             const keys = [];
             const data = [];
@@ -220,16 +234,19 @@ customElements.define(
       };
 
       this.$("#filter5").onclick = function () {
-        var db = firebase
-          .database()
-          .ref("/questions_cat/PREPOSITION/")
-          .orderByKey();
-        reset_cursor_params(db);
-        console.log("button");
-        $("#next-button").click();
+        UIDisplayPagination.paginationTotalCountDBREF = "/questions_cat/PREPOSITION"
+        dbref = firebase.database().ref(UIDisplayPagination.paginationTotalCountDBREF).orderByKey();
+        cursor = new Cursor(dbref, 9);
+        reset_cursor_params(dbref);
+        UIDisplayPagination.paginationCursor = cursor;
+
+        cardUiData.getDataWithPagination(cursor,'next').then(result => {cardUiData.createCards(result)});
+        getTotalCount(UIDisplayPagination.paginationTotalCountDBREF, "").then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
+        UIDisplayPagination.insertPagination();
+        UIDisplayPagination.updatePaginationButtons();
 
         $("#pre-list").html("");
-        var dbref = firebase.database().ref("/questions/PREPOSITION").orderByKey();
+        dbref = firebase.database().ref("/questions/PREPOSITION").orderByKey();
         dbref.once("value").then((snap) => {
             const keys = [];
             const data = [];
@@ -248,16 +265,20 @@ customElements.define(
       };
 
       this.$("#filter6").onclick = function () {
-        var db = firebase
-          .database()
-          .ref("/questions_cat/AUX/")
-          .orderByKey();
-        reset_cursor_params(db);
-        console.log("button");
-        $("#next-button").click();
+        UIDisplayPagination.paginationTotalCountDBREF = "/questions_cat/AUX"
+        dbref = firebase.database().ref(UIDisplayPagination.paginationTotalCountDBREF).orderByKey();
+        cursor = new Cursor(dbref, 9);
+        reset_cursor_params(dbref);
+        UIDisplayPagination.paginationCursor = cursor;
+
+        cardUiData.getDataWithPagination(cursor,'next').then(result => {cardUiData.createCards(result)});
+        getTotalCount(UIDisplayPagination.paginationTotalCountDBREF, "").then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
+        UIDisplayPagination.insertPagination();
+        UIDisplayPagination.updatePaginationButtons();
+
 
         $("#pre-list").html("");
-        var dbref = firebase.database().ref("/questions/AUX").orderByKey();
+        dbref = firebase.database().ref("/questions/AUX").orderByKey();
         dbref.once("value").then((snap) => {
             const keys = [];
             const data = [];

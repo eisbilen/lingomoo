@@ -168,6 +168,38 @@ const UIDisplayQuestionCard = {
     },
   
 }
+const UIDisplayQuestionWSCreationCard = {
+  questionIndex: 0,
+  questionArticleUrl: "",
+  questionImageUrl: "",
+  questionFileName: "",
+  HTMLContainerIDQuestionCardsTopLevel: "",
+  HTMLImageClassQuestionCard: "",
+  
+  get card() {
+    return `<div class="card">
+              <div class="card-img-top">
+                <img id="${this.questionFileName}" class="${this.HTMLImageClassQuestionCard}" src="${this.questionImageUrl}">
+                <a class="url btn btn-warning btn-sm bx bx-news" id="" data-toggle="tooltip" data-placement="top" title="" href="${this.questionFileName}" target="_blank" data-original-title="Read the News Article"></a>
+              </div>
+            </div>`;
+  },
+
+  set card(value) {
+    this.questionArticleUrl = value.questionArticleUrl;
+    this.questionImageUrl = value.questionImageUrl;
+    this.questionFileName = value.questionFileName;
+    this.questionIndex = value.questionIndex;
+    this.HTMLImageClassQuestionCard = value.HTMLImageClassQuestionCard;
+    this.HTMLContainerIDQuestionCardsTopLevel = value.HTMLContainerIDQuestionCardsTopLevel;
+  },
+
+  insertCard() {
+    cardContainerHTML = document.getElementById(this.HTMLContainerIDQuestionCardsTopLevel);
+    cardContainerHTML.insertAdjacentHTML("beforeend", this.card);
+  },
+
+}
 const UIDisplayPagination = {
     HTMLButtonClassPreviousButton: "btn btn-primary",
     HTMLButtonClassNextButton: "btn btn-primary",
@@ -175,7 +207,7 @@ const UIDisplayPagination = {
     //HTMLContainerIDPaginationTitle: "pagination-title",
     paginationCursor: Cursor,
     paginationDatabaseRef: "",
-    paginationPageSize: 30,
+    paginationPageSize: 1,
     paginationTotalCount: '',
     paginationPage: '',
   
@@ -254,7 +286,7 @@ const UIDisplayPagination = {
       this.HTMLContainerIDPagination = value.HTMLContainerIDPagination;
       this.paginationCursor = value.paginationCursor;
       this.paginationDatabaseRef = value.paginationDatabaseRef;
-      this.paginationPageSize = value.paginationPageSize;
+      this.paginationPageSize = this.paginationCursor.pageSize;
       this.paginationPage = parseInt(this.paginationCursor.lastIndex)/parseInt(this.paginationPageSize)
     },
   
