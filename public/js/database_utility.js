@@ -30,6 +30,35 @@ function findWSquestioncount(text) {
   return text.match(myRe)[1];
 }
 
+function changeWSCreatePOS(ref) {
+  dbref = firebase.database().ref(ref).orderByKey();
+  cursor = new Cursor(dbref, 9); 
+  reset_cursor_parameters(dbref, cursor) 
+  UIDisplayPagination.paginationCursor = cursor;
+  cardUiData.getDataWithPagination(cursor,'next').then(result => {cardUiData.createCards(result)});
+  getTotalCount(ref, "").then((result) => {
+    UIDisplayPagination.paginationTotalCount = Object.keys(result).length;
+  UIDisplayPagination.insertPagination();
+  UIDisplayPagination.updatePaginationButtons();
+  })
+
+}
+
+function changeCreateListElements(ref,POS) {
+  $("#pre-list").html("");
+  ref.once("value").then((snap) => {
+    const keys = [];
+    const data = [];
+    // store data in array so it's ordered
+    snap.forEach((ss) => {
+      data.push(ss.val());
+      keys.push(ss.key);
+      createListElements(ss.key, POS) 
+    });
+  });
+  $("html, body").animate({scrollTop: $("#browse-PoS").offset().top - 20,},500);
+}
+
 // this is a general utility function that gets a firebase snapshot and returns objects with key and value pairs
 async function snapshotToArray(snapshot) {
   let returnObj = {};
@@ -70,14 +99,8 @@ async function getFirebaseDataWithPagination(cursor, button){
 // Resets the cursor paramaters
 // Sets the databse referance with the provided argument -key-
 function button_click_populate(key, tag) {
-  var dbRef = firebase
-    .database()
-    .ref("/questions/" + tag + "/" + key.toString() + "/")
-    .orderByKey();
-
-  console.log(key);
-  reset_cursor_params(dbRef);
-  populate_question_cards();
+  let ref = "/questions/" + tag + "/" + key.toString() + "/"
+  changeWSCreatePOS(ref)
 }
 
 // This function runs the queryDatabse funtion which populates the HTML of question cards

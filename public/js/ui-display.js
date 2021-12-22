@@ -223,23 +223,22 @@ const UIDisplayPagination = {
       this.paginationPage = parseInt(this.paginationCursor.lastIndex)/parseInt(UIDisplayPagination.paginationPageSize);
 
       if (this.paginationCursor.firstIndex == 1) {
-        //$("#previous-button").addClass("disabled");
         this.HTMLButtonClassPreviousButton = "btn btn-primary disabled";
       } else {
         this.HTMLButtonClassPreviousButton = "btn btn-primary";
-        //$("#previous-button").removeClass("disabled");
       }
   
       if (this.paginationCursor.lastRecord == 1) {
-        //$("#next-button").addClass("disabled");
         this.HTMLButtonClassNextButton = "btn btn-primary disabled";
       } else {
-        //$("#next-button").removeClass("disabled");
         this.HTMLButtonClassNextButton = "btn btn-primary";
       }
   
       if (this.paginationCursor.lastIndex == this.paginationTotalCount) {
-        //$("#next-button").addClass("disabled");
+        this.HTMLButtonClassNextButton = "btn btn-primary disabled";
+      }
+
+      if (this.paginationCursor.pageSize >= this.paginationTotalCount) {
         this.HTMLButtonClassNextButton = "btn btn-primary disabled";
       }
  

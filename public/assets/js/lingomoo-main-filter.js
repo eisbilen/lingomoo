@@ -1,35 +1,7 @@
 // lingomoo-main-filter.js
 
 const template = document.createElement("template");
-
-function changeWSCreatePOS(ref) {
-  dbref = firebase.database().ref(ref).orderByKey();
-  cursor = new Cursor(dbref, 9); 
-  reset_cursor_parameters(dbref, cursor) 
-  UIDisplayPagination.paginationCursor = cursor;
-  cardUiData.getDataWithPagination(cursor,'next').then(result => {cardUiData.createCards(result)});
-  getTotalCount(ref, "").then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
-  UIDisplayPagination.insertPagination();
-  UIDisplayPagination.updatePaginationButtons();
-}
-
-function changeCreateListElements(ref,POS) {
-  $("#pre-list").html("");
-  ref.once("value").then((snap) => {
-    const keys = [];
-    const data = [];
-    // store data in array so it's ordered
-    snap.forEach((ss) => {
-      data.push(ss.val());
-      keys.push(ss.key);
-      createListElements(ss.key, POS) 
-    });
-  });
-  $("html, body").animate({scrollTop: $("#browse-PoS").offset().top - 20,},500);
-}
-
 template.innerHTML = ` 
-
 <!-- Vendor CSS Files -->
 <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 

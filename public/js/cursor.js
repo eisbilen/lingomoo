@@ -118,7 +118,6 @@ class Cursor {
         return result;
       }, {})
 
-
       return {data: data, snap: resultObj};
     });
   }

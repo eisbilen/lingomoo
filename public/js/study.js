@@ -22,7 +22,11 @@ UIDisplayPagination.pagination = {  HTMLButtonClassPreviousButton: "btn btn-prim
                                     paginationTotalCount: 0,
                                   }
 
-UIDisplayPagination.insertPagination();
-UIDisplayPagination.updatePaginationButtons();
+getTotalCount("/worksheets", "").then((result) => {
+    UIDisplayPagination.paginationTotalCount = Object.keys(result).length;
+    UIDisplayPagination.insertPagination();
+    UIDisplayPagination.updatePaginationButtons();
+})
+
 ////////////////////////////////////////////////
 

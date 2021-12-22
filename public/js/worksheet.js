@@ -5,6 +5,7 @@ let totalQuestionCount = 0;
 let countCorrectAnswer = 0;
 let countWrongAnswer = 0;
 let cardData = {}
+
 //////////////////////////////////////////////////
 let dbref = firebase.database().ref("/questions_cat/VERB").orderByKey();
 let cursor = new Cursor(dbref, 9);
@@ -31,9 +32,11 @@ UIDisplayPagination.pagination = {  HTMLButtonClassPreviousButton: "btn btn-prim
                                     paginationTotalCount: 0,
                                     paginationTotalCountDBREF: "/questions_cat/VERB",
                                   }
-getTotalCount(UIDisplayPagination.paginationTotalCountDBREF, "").then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
-UIDisplayPagination.insertPagination();
-UIDisplayPagination.updatePaginationButtons();
+
+UIDisplayPagination.paginationTotalCountDBREF = "/questions_cat/VERB"
+changeWSCreatePOS(UIDisplayPagination.paginationTotalCountDBREF)
+dbref = firebase.database().ref("/questions/VERB").orderByKey();
+changeCreateListElements(dbref, "VERB")
 ////////////////////////////////////////////////
 
 //$(function () {
