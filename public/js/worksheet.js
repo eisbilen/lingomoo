@@ -36,14 +36,14 @@ UIDisplayPagination.insertPagination();
 UIDisplayPagination.updatePaginationButtons();
 ////////////////////////////////////////////////
 
-$(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-})
+//$(function () {
+//    $('[data-toggle="tooltip"]').tooltip()
+//})
 
-$(document).ready(function () {
-  $("#max-alert").hide();
-  $(".btn-group :input").change(function () {
-      console.log(this); // points to the clicked input button
-  });
-});
+//$(document).ready(function () {
+//  $("#max-alert").hide();
+//  $(".btn-group :input").change(function () {
+//      console.log(this); // points to the clicked input button
+//  });
+//});
 
