@@ -110,16 +110,7 @@ customElements.define(
     constructor() {
       super();
       const root = this.attachShadow({ mode: "open" });
-      //const filters = ["VERB", "NOUN"];
-      //const arrayLength = filters.length;
-
       root.appendChild(template.content.cloneNode(true));
-
-     // function removeAllChildNodes(parent) {
-     //   while (parent.firstChild) {
-     //       parent.removeChild(parent.firstChild);
-     //   }
-    //  }
 
       this.$("#filter1").onclick = function () {
         UIDisplayPagination.paginationTotalCountDBREF = "/questions_cat/VERB"
