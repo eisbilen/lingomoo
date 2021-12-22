@@ -2,6 +2,32 @@
 
 const template = document.createElement("template");
 
+function changeWSCreatePOS(ref) {
+  dbref = firebase.database().ref(ref).orderByKey();
+  cursor = new Cursor(dbref, 9); 
+  reset_cursor_parameters(dbref, cursor) 
+  UIDisplayPagination.paginationCursor = cursor;
+  cardUiData.getDataWithPagination(cursor,'next').then(result => {cardUiData.createCards(result)});
+  getTotalCount(ref, "").then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
+  UIDisplayPagination.insertPagination();
+  UIDisplayPagination.updatePaginationButtons();
+}
+
+function changeCreateListElements(ref,POS) {
+  $("#pre-list").html("");
+  ref.once("value").then((snap) => {
+    const keys = [];
+    const data = [];
+    // store data in array so it's ordered
+    snap.forEach((ss) => {
+      data.push(ss.val());
+      keys.push(ss.key);
+      createListElements(ss.key, POS) 
+    });
+  });
+  $("html, body").animate({scrollTop: $("#browse-PoS").offset().top - 20,},500);
+}
+
 template.innerHTML = ` 
 
 <!-- Vendor CSS Files -->
@@ -13,7 +39,6 @@ template.innerHTML = `
 <script src="../assets/vendor/jquery/jquery.min.js"></script>
 <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../assets/vendor/jquery.easing/jquery.easing.min.js"></script>
-
 
 <div class="container mt-4">
 <div class="row row-cols-1 row-cols-md-3">
@@ -85,218 +110,64 @@ customElements.define(
     constructor() {
       super();
       const root = this.attachShadow({ mode: "open" });
-      const filters = ["VERB", "NOUN"];
-      const arrayLength = filters.length;
+      //const filters = ["VERB", "NOUN"];
+      //const arrayLength = filters.length;
 
       root.appendChild(template.content.cloneNode(true));
 
-      function removeAllChildNodes(parent) {
-        while (parent.firstChild) {
-            parent.removeChild(parent.firstChild);
-        }
-    }
+     // function removeAllChildNodes(parent) {
+     //   while (parent.firstChild) {
+     //       parent.removeChild(parent.firstChild);
+     //   }
+    //  }
 
       this.$("#filter1").onclick = function () {
         UIDisplayPagination.paginationTotalCountDBREF = "/questions_cat/VERB"
-        dbref = firebase.database().ref(UIDisplayPagination.paginationTotalCountDBREF).orderByKey();
-        cursor = new Cursor(dbref, 9); 
-        reset_cursor_params(dbref);
-        UIDisplayPagination.paginationCursor = cursor;
-        cardUiData.getDataWithPagination(cursor,'next').then(result => {cardUiData.createCards(result)});
-        getTotalCount(UIDisplayPagination.paginationTotalCountDBREF, "").then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
-        UIDisplayPagination.insertPagination();
-        UIDisplayPagination.updatePaginationButtons();
-
-
-
-        $("#pre-list").html("");
-    
-        removeAllChildNodes($("#pre-list"))
+        changeWSCreatePOS(UIDisplayPagination.paginationTotalCountDBREF)
 
         dbref = firebase.database().ref("/questions/VERB").orderByKey();
-        dbref.once("value").then((snap) => {
-            const keys = [];
-            const data = [];
-            // store data in array so it's ordered
-            snap.forEach((ss) => {
-              data.push(ss.val());
-              keys.push(ss.key);
-              createListElements(ss.key, 'VERB') 
-            });
-            console.log("data.length");
-            console.log(data.length);
-            console.log("keys");
-            console.log(keys);
-          });
-
-          $("html, body").animate({scrollTop: $("#browse-PoS").offset().top - 20,},500);
-
+        changeCreateListElements(dbref, "VERB")
       };
 
       this.$("#filter2").onclick = function () {
-
         UIDisplayPagination.paginationTotalCountDBREF = "/questions_cat/NOUN"
-        dbref = firebase.database().ref(UIDisplayPagination.paginationTotalCountDBREF).orderByKey();
-        cursor = new Cursor(dbref, 9);
-        reset_cursor_params(dbref);
-        UIDisplayPagination.paginationCursor = cursor;
-        cardUiData.getDataWithPagination(cursor,'next').then(result => {cardUiData.createCards(result)});
-        getTotalCount(UIDisplayPagination.paginationTotalCountDBREF, "").then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
-        UIDisplayPagination.insertPagination();
-        UIDisplayPagination.updatePaginationButtons();
+        changeWSCreatePOS(UIDisplayPagination.paginationTotalCountDBREF)
 
-
-        $("#pre-list").html("");
         dbref = firebase.database().ref("/questions/NOUN").orderByKey();
-        dbref.once("value").then((snap) => {
-            const keys = [];
-            const data = [];
-            // store data in array so it's ordered
-            snap.forEach((ss) => {
-              data.push(ss.val());
-              keys.push(ss.key);
-              createListElements(ss.key, 'NOUN') 
-            });
-            console.log("data.length");
-            console.log(data.length);
-            console.log("keys");
-            console.log(keys);
-          });
-
-          $("html, body").animate({scrollTop: $("#browse-PoS").offset().top - 20,},500);
-
+        changeCreateListElements(dbref, "NOUN")
       };
 
       this.$("#filter3").onclick = function () {
         UIDisplayPagination.paginationTotalCountDBREF = "/questions_cat/ADJECTIVE"
-        dbref = firebase.database().ref(UIDisplayPagination.paginationTotalCountDBREF ).orderByKey();
-        cursor = new Cursor(dbref, 9);
-        reset_cursor_params(dbref);
-        UIDisplayPagination.paginationCursor = cursor;
-        cardUiData.getDataWithPagination(cursor,'next').then(result => {cardUiData.createCards(result)});
-        getTotalCount(UIDisplayPagination.paginationTotalCountDBREF, "").then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
-        UIDisplayPagination.insertPagination();
-        UIDisplayPagination.updatePaginationButtons();
+        changeWSCreatePOS(UIDisplayPagination.paginationTotalCountDBREF)
 
-
-        $("#pre-list").html("");
         dbref = firebase.database().ref("/questions/ADJECTIVE").orderByKey();
-        dbref.once("value").then((snap) => {
-            const keys = [];
-            const data = [];
-            // store data in array so it's ordered
-            snap.forEach((ss) => {
-              data.push(ss.val());
-              keys.push(ss.key);
-              createListElements(ss.key, 'ADJECTIVE') 
-            });
-            console.log("data.length");
-            console.log(data.length);
-            console.log("keys");
-            console.log(keys);
-          });
-
-          $("html, body").animate({scrollTop: $("#browse-PoS").offset().top - 20,},500);
-
-
+        changeCreateListElements(dbref, "ADJECTIVE")
       };
 
       this.$("#filter4").onclick = function () {
         UIDisplayPagination.paginationTotalCountDBREF = "/questions_cat/ADVERB"
-        dbref = firebase.database().ref(UIDisplayPagination.paginationTotalCountDBREF).orderByKey();
-        cursor = new Cursor(dbref, 9);
-        reset_cursor_params(dbref);
-        UIDisplayPagination.paginationCursor = cursor;
-        cardUiData.getDataWithPagination(cursor,'next').then(result => {cardUiData.createCards(result)});
-        getTotalCount(UIDisplayPagination.paginationTotalCountDBREF, "").then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
-        UIDisplayPagination.insertPagination();
-        UIDisplayPagination.updatePaginationButtons();
+        changeWSCreatePOS(UIDisplayPagination.paginationTotalCountDBREF)
 
-
-        $("#pre-list").html("");
         dbref = firebase.database().ref("/questions/ADVERB").orderByKey();
-        dbref.once("value").then((snap) => {
-            const keys = [];
-            const data = [];
-            // store data in array so it's ordered
-            snap.forEach((ss) => {
-              data.push(ss.val());
-              keys.push(ss.key);
-              createListElements(ss.key, 'ADVERB') 
-            });
-            console.log("data.length");
-            console.log(data.length);
-            console.log("keys");
-            console.log(keys);
-          });
-
-          $("html, body").animate({scrollTop: $("#browse-PoS").offset().top - 20,},500);
+        changeCreateListElements(dbref, "ADVERB")
       };
 
       this.$("#filter5").onclick = function () {
         UIDisplayPagination.paginationTotalCountDBREF = "/questions_cat/PREPOSITION"
-        dbref = firebase.database().ref(UIDisplayPagination.paginationTotalCountDBREF).orderByKey();
-        cursor = new Cursor(dbref, 9);
-        reset_cursor_params(dbref);
-        UIDisplayPagination.paginationCursor = cursor;
+        changeWSCreatePOS(UIDisplayPagination.paginationTotalCountDBREF)
 
-        cardUiData.getDataWithPagination(cursor,'next').then(result => {cardUiData.createCards(result)});
-        getTotalCount(UIDisplayPagination.paginationTotalCountDBREF, "").then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
-        UIDisplayPagination.insertPagination();
-        UIDisplayPagination.updatePaginationButtons();
-
-        $("#pre-list").html("");
         dbref = firebase.database().ref("/questions/PREPOSITION").orderByKey();
-        dbref.once("value").then((snap) => {
-            const keys = [];
-            const data = [];
-            // store data in array so it's ordered
-            snap.forEach((ss) => {
-              data.push(ss.val());
-              keys.push(ss.key);
-              createListElements(ss.key, 'PREPOSITION') 
-            });
-            console.log("data.length");
-            console.log(data.length);
-            console.log("keys");
-            console.log(keys);
-          });
-          $("html, body").animate({scrollTop: $("#browse-PoS").offset().top - 20,},500);
+        changeCreateListElements(dbref, "PREPOSITION")
       };
 
       this.$("#filter6").onclick = function () {
         UIDisplayPagination.paginationTotalCountDBREF = "/questions_cat/AUX"
-        dbref = firebase.database().ref(UIDisplayPagination.paginationTotalCountDBREF).orderByKey();
-        cursor = new Cursor(dbref, 9);
-        reset_cursor_params(dbref);
-        UIDisplayPagination.paginationCursor = cursor;
+        changeWSCreatePOS(UIDisplayPagination.paginationTotalCountDBREF)
 
-        cardUiData.getDataWithPagination(cursor,'next').then(result => {cardUiData.createCards(result)});
-        getTotalCount(UIDisplayPagination.paginationTotalCountDBREF, "").then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
-        UIDisplayPagination.insertPagination();
-        UIDisplayPagination.updatePaginationButtons();
-
-
-        $("#pre-list").html("");
         dbref = firebase.database().ref("/questions/AUX").orderByKey();
-        dbref.once("value").then((snap) => {
-            const keys = [];
-            const data = [];
-            // store data in array so it's ordered
-            snap.forEach((ss) => {
-              data.push(ss.val());
-              keys.push(ss.key);
-              createListElements(ss.key, 'AUX') 
-            });
-            console.log("data.length");
-            console.log(data.length);
-            console.log("keys");
-            console.log(keys);
-          });
-          $("html, body").animate({scrollTop: $("#browse-PoS").offset().top - 20,},500);
-
+        changeCreateListElements(dbref, "AUX")
       };
-
     }
     connectedCallback() {
         $("#pre-list").innerHTML = '';
