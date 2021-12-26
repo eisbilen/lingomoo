@@ -166,7 +166,7 @@ function removeQuestionFromWS(thisCard, questionArticleUrl, questionFileName, qu
 // worksheets_cat cathegorizes the wotksheets
 // worksheets folder contains all ws items with no cathegorization
 // invoked by writeWS() function
-function writeSingleWS(wsname, key, data, wsdatetime, tag1, tag2) {
+function writeSingleWS(wsname, key, data, wsdatetime, tag1, tag2, count) {
 
     firebase.database().ref("worksheets_cat/" + tag1 + "/" + tag2 + "/" +  wsdatetime + "__" + uid +  "___" + wsname + "!!" + count + "_!!" + tag1 + "::" + tag2 + "_" + "/" + key).set({
         article_url: data['article_url'],
@@ -209,11 +209,11 @@ function writeSingleToLibrary(key_main, key, data) {
 // and stores them in worksheets and worksheets_cat nodes
 // removes the questions in users/worksheet onces they are stored in worksheets node
 // invoked by the 'save worksheet' button on the worksheet-view.html
-async function writeWS(wsname, wsdatetime, tag1, tag2) {
+async function writeWS(wsname, wsdatetime, tag1, tag2, count) {
 firebase.database().ref('users/' + uid + '/worksheet').once("value", snapshot => {
     if (snapshot.exists()) {
         snapshot.forEach(ss => {
-            writeSingleWS(wsname, ss.key, ss.val(), wsdatetime, tag1, tag2)
+            writeSingleWS(wsname, ss.key, ss.val(), wsdatetime, tag1, tag2, count)
             removeSingleWSItem(ss.val()['file_name'])
         });
     } else {

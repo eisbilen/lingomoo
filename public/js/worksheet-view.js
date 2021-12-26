@@ -76,6 +76,8 @@ document.getElementById("WSSaveButton").onclick = async (e)=> {
   e.preventDefault();
   $("#invalidWS").addClass("d-none");
   $("#invalidTag").addClass("d-none");
+  
+  const count = $("#ws-question-count").text();
 
   if ($("#WSname").val() == "") 
   {
@@ -125,7 +127,7 @@ document.getElementById("WSSaveButton").onclick = async (e)=> {
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
       }
-  await writeWS($("input[name=worksheetname]").val(), wsDateTime, tag1, tag2)
+  await writeWS($("input[name=worksheetname]").val(), wsDateTime, tag1, tag2, count)
   
   await sleep(500);
    
