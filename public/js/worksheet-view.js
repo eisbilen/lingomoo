@@ -1,10 +1,3 @@
-var dataObject = [];
-var dataObject2 = [];
-var dataFinal = [];
-
-var url_list = [];
-var img_list = [];
-
 var ws_question_list = [];
 let cardContainer;
 var filename_answer = " ";
@@ -18,121 +11,17 @@ $(function () {
   $('[data-toggle="tooltip"]').tooltip();
 });
 
-//var dbref= firebase.database().ref('users/' + uid + '/worksheet/').orderByKey()
-//const cursor = new Cursor(dbref, 9);
-
-let createTaskCard = (correct_answer, article_url, url, fl) => {
-  let card_flip = document.createElement("div");
-  card_flip.className = "card";
-
-  let card_body = document.createElement("div");
-  card_body.className = "card-body";
-
-  let card_front = document.createElement("div");
-  card_front.className = "card-img-top";
-
-  let cardImage_back = document.createElement("img");
-  cardImage_back.className = "card-img-top";
-  cardImage_back.src = "";
-  cardImage_back.id = "card-back";
-
-  let cardImage_front = document.createElement("img");
-  cardImage_front.className = "card-img-top";
-  cardImage_front.src = url;
-
-  url_list.push(url);
-
-  cardImage_front.id = fl;
-
-  let correct_img = document.createElement("img");
-  correct_img.className = "correct-img";
-  correct_img.src = "assets/img/correct.png";
-
-  let wrong_img = document.createElement("img");
-  wrong_img.className = "wrong-img";
-  wrong_img.src = "assets/img/wrong.png";
-
-  let butt_link = document.createElement("a");
-  butt_link.innerText = "";
-  butt_link.className = "url btn btn-warning btn-sm bx bxs-eraser";
-  butt_link.id = "article_url" + count.toString();
-
-  var attr1 = document.createAttribute("data-toggle");
-  attr1.value = "tooltip";
-
-  var attr2 = document.createAttribute("data-placement");
-  attr2.value = "top";
-
-  var attr3 = document.createAttribute("title");
-  attr3.value = "Remove This Question From Your Worksheet";
-
-  var attr4 = document.createAttribute("worksheet-url");
-  attr4.value = url;
-
-  butt_link.setAttributeNode(attr1);
-  butt_link.setAttributeNode(attr2);
-  butt_link.setAttributeNode(attr3);
-  butt_link.setAttributeNode(attr4);
-
-  butt_link.onclick = function () {
-    let qc = Number($("#ws-question-count").text());
-    if (qc <= 1) {
-      $("#min-alert")
-        .fadeTo(2000, 50)
-        .slideUp(50, function () {
-          $("#min-alert").slideUp(50);
-        });
-      console.log("min 1 soru olmali");
-    } else {
-      removeQuestionFromWS(
-        $(this).parentsUntil($("div.card-columns")),
-        url,
-        fl,
-        correct_answer,
-        parseInt($("#ws-question-count").html(), 10)
-      );
-
-      $(this).tooltip("hide");
-      //$(this).parentsUntil( $( "div.card-columns" )).remove();
-    }
-  };
-
-  $("#article_url" + (count - 1).toString()).tooltip("enable");
-
-  count = count + 1;
-
-  card_flip.appendChild(card_front);
-  card_front.appendChild(cardImage_front);
-
-  card_front.appendChild(butt_link);
-  card_front.appendChild(correct_img);
-  card_front.appendChild(wrong_img);
-  cardContainer.appendChild(card_flip);
-};
+///////////////// Insert Question Cards ///////////
+const cardUiData = new UIData();
+const questionWSSaveCardData = new QuestionWSSaveCardData();
+cardUiData.setStrategy(questionWSSaveCardData)
+////////////////////////////////////////////////
 
 $(document).ready(function () {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      console.log("user already signed in");
-      console.log(user);
       uid = user.uid;
-      console.log(uid);
-      getUserfromDatabase(
-        user.uid,
-        user.displayName,
-        user.email,
-        user.photoURL
-      );
-
-      var dbref = firebase
-        .database()
-        .ref("users/" + uid + "/worksheet")
-        .orderByKey();
-      console.log(uid);
-      const cursor = new Cursor(dbref, 24);
-
-      initListOfTasks(0);
-      getQuestionData(cursor);
+      cardUiData.getData('users/' + uid + '/worksheet/', '').then(result => {cardUiData.createCards(result)});
     } else {
       console.log("user signed out");
     }
@@ -140,7 +29,7 @@ $(document).ready(function () {
 
   $(document).on("keydown", "form", function(event) { 
     return event.key != "Enter";
-});
+  });
 
 
   $(".dropdown-menu a").click(function () {

@@ -209,6 +209,27 @@ body {
   height: auto;
   display: none;
 }
+.user-answer {
+  position: absolute;
+  z-index: 990;
+  margin-right: 15%;
+  right: 0%;
+  bottom: 10%;
+  width: 10%;
+  height: auto;
+}
+
+.user-answer {
+  position: absolute;
+  z-index: 990;
+  margin-right: 15%;
+  right: 0%;
+  bottom: 10%;
+  width: 10%;
+  height: auto;
+}
+
+
 .wrong-img {
   position: absolute;
   z-index: 990;
@@ -244,11 +265,17 @@ body {
 .btn.btn-group {
   display: none;
 }
+.user-answer{
+  display: none;
+}
 
 .card-img-top:hover .btn-warning {
   display: block;
 }
 .card-img-top:hover .btn-group {
+  display: block;
+}
+.card-img-top:hover .user-answer {
   display: block;
 }
 

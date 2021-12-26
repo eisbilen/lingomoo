@@ -3,9 +3,7 @@ let cursor = new Cursor(dbref, 6);
 
 let cardUiData = new UIData();
 const worksheetCardData = new WorksheetCardData();
-
 cardUiData.setStrategy(worksheetCardData)
-
 //cardUiData.getDataWithLimitToLast("/worksheets",8).then(result => {console.log(result); cardUiData.createCards(result)});
 cardUiData.getDataWithPagination(cursor,'next').then(result => {console.log(result); cardUiData.createCards(result)});
 
@@ -27,6 +25,5 @@ getTotalCount("/worksheets", "").then((result) => {
     UIDisplayPagination.insertPagination();
     UIDisplayPagination.updatePaginationButtons();
 })
-
 ////////////////////////////////////////////////
 

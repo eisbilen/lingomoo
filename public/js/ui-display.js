@@ -81,29 +81,44 @@ const UIDisplayQuestionCard = {
     HTMLImageStyleCross: "",
     HTMLButtonGroupStyleQuestionOptions: "",
     HTMLButtonStyleCheckQuestionAnswer: "",
+    HTMLButtonStyleUserAnswer: "",
     
-    buttonAOptionFunc: () => {console.log("ButtonA");
-                              userAnswerGLOBAL = 0;},
-    buttonBOptionFunc: () => {console.log("ButtonB");
-                              userAnswerGLOBAL = 1;},
-    buttonCOptionFunc: () => {console.log("ButtonC");
-                              userAnswerGLOBAL = 2;}, 
-    buttonDOptionFunc: () => {console.log("ButtonD");
-                              userAnswerGLOBAL = 3;},
+    buttonAOptionFunc: function () {console.log($(this).parent().siblings(".user-answer"))
+                                    $(this).parent().siblings(".user-answer").text('A')
+                                    userAnswerGLOBAL = 0;},
+    buttonBOptionFunc: function () {console.log("ButtonB");
+                                    $(this).parent().siblings(".user-answer").text('B')
+                                    userAnswerGLOBAL = 1;},
+    buttonCOptionFunc: function () {console.log("ButtonC");
+                                    $(this).parent().siblings(".user-answer").text('C')
+                                    userAnswerGLOBAL = 2;}, 
+    buttonDOptionFunc: function () {console.log("ButtonD");
+                                    $(this).parent().siblings(".user-answer").text('D')
+                                    userAnswerGLOBAL = 3;},
   
     buttonCheckAnswerFunc: function () {
+
+                              userAnswerButtonElement =  $(this).siblings(".user-answer")
+
+                              console.log(userAnswerButtonElement.innerText)
+                              console.log(userAnswerButtonElement.innerHTML)
+                              console.log(userAnswerButtonElement.text())
+                              if (userAnswerButtonElement.text() == "?") {return}
+
                               correctAnswer = $(this).attr("correct-answer")
                               questionFileName = $(this).siblings(".card-img-top").attr("id")
                               questionCardElement = $(this).siblings(".card-img-top")
                               optionButtonGroupElement = $(this).siblings(".btn-group")
+                              
                               correctImageElement = $(this).siblings(".correct-img")
                               wrongImageElement = $(this).siblings(".wrong-img")
                               checkButtonElement = $(this)
                               checkButtonElement.tooltip("hide");
                               checkButtonElement.remove();
                               optionButtonGroupElement.remove();
-  
-                              if (userAnswerGLOBAL == correctAnswer) {
+                              userAnswerButtonElement.remove();
+                              
+                              if (userAnswerButtonElement.text() == abcdTo1234(correctAnswer) ) {
                                 correctImageElement.show();
                                 countCorrectAnswer += 1;
                               } 
@@ -132,12 +147,15 @@ const UIDisplayQuestionCard = {
                     <button id="button-B${this.questionIndex}" type="button" class="btn btn-primary btn-sm">B</button>
                     <button id="button-C${this.questionIndex}" type="button" class="btn btn-primary btn-sm">C</button>
                     <button id="button-D${this.questionIndex}" type="button" class="btn btn-primary btn-sm">D</button>
+
                   </div>
                   <img id="${this.questionFileName}" class="${this.HTMLImageClassQuestionCard}" src="${this.questionImageUrl}">
                   <a id="check-answer${this.questionIndex}" style="${this.HTMLButtonStyleCheckQuestionAnswer}" class="btn btn-warning btn-sm bx bx-right-arrow-circle" data-toggle="tooltip" data-placement="top" title="" correct-answer="${this.questionCorrectAnswer}" data-original-title="Check the Answer"></a>
-                  <a class="url btn btn-warning btn-sm bx bx-news" id="" data-toggle="tooltip" data-placement="top" title="" href="${this.questionFileName}" target="_blank" data-original-title="Read the News Article"></a>
+                  <a class="url btn btn-warning btn-sm bx bx-news" id="" data-toggle="tooltip" data-placement="top" title="" href="${this.questionArticleUrl}" target="_blank" data-original-title="Read the News Article"></a>
                   <img class="correct-img" style="${this.HTMLImageStyleTick}" src="assets/img/correct.png">
                   <img class="wrong-img" style="${this.HTMLImageStyleCross}" src="assets/img/wrong.png">
+                  <button id="user-answer" style="${this.HTMLButtonStyleUserAnswer}" class="user-answer btn btn-secondary btn-sm" style="" disabled>?</button>
+
                 </div>
               </div>`;
     },
@@ -152,6 +170,7 @@ const UIDisplayQuestionCard = {
       this.HTMLImageStyleCross = value.HTMLImageStyleCross;
       this.HTMLButtonGroupStyleQuestionOptions = value.HTMLButtonGroupStyleQuestionOptions;
       this.HTMLButtonStyleCheckQuestionAnswer = value.HTMLButtonStyleCheckQuestionAnswer;
+      this.HTMLButtonStyleUserAnswer = value.HTMLButtonStyleUserAnswer;
       this.HTMLImageClassQuestionCard = value.HTMLImageClassQuestionCard;
       this.HTMLContainerIDQuestionCardsTopLevel = value.HTMLContainerIDQuestionCardsTopLevel;
     },
@@ -170,22 +189,38 @@ const UIDisplayQuestionCard = {
 }
 const UIDisplayQuestionWSCreationCard = {
   questionIndex: 0,
+  questionCorrectAnswer: "",
   questionArticleUrl: "",
   questionImageUrl: "",
   questionFileName: "",
   HTMLContainerIDQuestionCardsTopLevel: "",
   HTMLImageClassQuestionCard: "",
-  
+
+  buttonAddQuestionToWorksheet: function () {
+    let questionCount = Number($('#ws-question-count').text())
+    let questionCorrectAnswer = $(this).attr("correct-answer")
+    let questionArticleUrl = $(this).attr("article-url")
+    let questionFileName = $(this).siblings(".card-img-top").attr("id")
+
+    if (questionCount >= 24) {
+      $("#max-alert").fadeTo(2000, 50).slideUp(50, function () {$("#max-alert").slideUp(50);});
+    }
+    else {
+      addQuestionToWS(questionArticleUrl, questionFileName, questionCorrectAnswer, parseInt($('#ws-question-count').html(), 10))
+    }
+  },
+
   get card() {
     return `<div class="card">
               <div class="card-img-top">
                 <img id="${this.questionFileName}" class="${this.HTMLImageClassQuestionCard}" src="${this.questionImageUrl}">
-                <a class="url btn btn-warning btn-sm bx bx-news" id="" data-toggle="tooltip" data-placement="top" title="" href="${this.questionFileName}" target="_blank" data-original-title="Read the News Article"></a>
+                <a class="url btn btn-warning btn-sm bx bx-book-add" id="add-question${this.questionIndex}" correct-answer="${this.questionCorrectAnswer}" article-url="${this.questionArticleUrl}" data-toggle="tooltip" data-placement="top" title="Add This Question Into Your Worksheet" target="_blank" data-original-title=""></a>
               </div>
             </div>`;
   },
 
   set card(value) {
+    this.questionCorrectAnswer = value.questionCorrectAnswer;
     this.questionArticleUrl = value.questionArticleUrl;
     this.questionImageUrl = value.questionImageUrl;
     this.questionFileName = value.questionFileName;
@@ -197,9 +232,59 @@ const UIDisplayQuestionWSCreationCard = {
   insertCard() {
     cardContainerHTML = document.getElementById(this.HTMLContainerIDQuestionCardsTopLevel);
     cardContainerHTML.insertAdjacentHTML("beforeend", this.card);
+    document.getElementById("add-question" + this.questionIndex.toString()).addEventListener('click', this.buttonAddQuestionToWorksheet);
   },
 
 }
+
+const UIDisplayQuestionWSSaveCard = {
+  questionIndex: 0,
+  questionCorrectAnswer: "",
+  questionArticleUrl: "",
+  questionImageUrl: "",
+  questionFileName: "",
+  HTMLContainerIDQuestionCardsTopLevel: "",
+  HTMLImageClassQuestionCard: "",
+
+  buttonRemoveQuestionFromWorksheet: function () {
+    let questionCount = Number($('#ws-question-count').text())
+    let questionCorrectAnswer = $(this).attr("correct-answer")
+    let questionArticleUrl = $(this).attr("article-url")
+    let questionFileName = $(this).siblings(".card-img-top").attr("id")
+
+    if (questionCount <= 1) {$("#min-alert").fadeTo(2000, 50).slideUp(50, function () {$("#min-alert").slideUp(50);});
+    } else {
+      removeQuestionFromWS($(this).parentsUntil($("div.card-columns")), questionArticleUrl, questionFileName, questionCorrectAnswer, parseInt($("#ws-question-count").html(), 10));
+    }
+  },
+
+  get card() {
+    return `<div class="card">
+              <div class="card-img-top">
+                <img id="${this.questionFileName}" class="${this.HTMLImageClassQuestionCard}" src="${this.questionImageUrl}">
+                <a class="url btn btn-warning btn-sm bx bxs-eraser" id="remove-question${this.questionIndex}" correct-answer="${this.questionCorrectAnswer}" article-url="${this.questionArticleUrl}" data-toggle="tooltip" data-placement="top" title="Remove This Question From Your Worksheet" target="_blank" data-original-title=""></a>
+              </div>
+            </div>`;
+  },
+
+  set card(value) {
+    this.questionCorrectAnswer = value.questionCorrectAnswer;
+    this.questionArticleUrl = value.questionArticleUrl;
+    this.questionImageUrl = value.questionImageUrl;
+    this.questionFileName = value.questionFileName;
+    this.questionIndex = value.questionIndex;
+    this.HTMLImageClassQuestionCard = value.HTMLImageClassQuestionCard;
+    this.HTMLContainerIDQuestionCardsTopLevel = value.HTMLContainerIDQuestionCardsTopLevel;
+  },
+
+  insertCard() {
+    cardContainerHTML = document.getElementById(this.HTMLContainerIDQuestionCardsTopLevel);
+    cardContainerHTML.insertAdjacentHTML("beforeend", this.card);
+    document.getElementById("remove-question" + this.questionIndex.toString()).addEventListener('click', this.buttonRemoveQuestionFromWorksheet);
+  },
+
+}
+
 const UIDisplayPagination = {
     HTMLButtonClassPreviousButton: "btn btn-primary",
     HTMLButtonClassNextButton: "btn btn-primary",
@@ -299,7 +384,6 @@ const UIDisplayPagination = {
 }
 /////////////////////////////////////////////////////////////////////
 
-
 ///////////////////// UI DISPLAY ITEMS FOR STUDY.HTML ///////////////
 // this object represent the worksheet cards for WEB UI
 // set card(value) helps to define the values for card
@@ -308,7 +392,8 @@ const UIDisplayWorkSheetCard = {
   key: "",
   name: "",
   dateCreated: "",
-  creator: "",
+  creatorName: "",
+  creatorPhotoURL: "assets/img/favicon.png",
   questionCount: "",
   container: "",
   tagPrimary: "",
@@ -322,9 +407,9 @@ const UIDisplayWorkSheetCard = {
         <div class="d-flex justify-content-between">
           <div class="d-flex flex-row align-items-center">
             <div class="icon">
-              <img class="card-img-top rounded" src="/img/user-circle-solid.svg" style="height: 40px; width: 40px;"></div>
+              <img class="card-img-top rounded" src="${this.creatorPhotoURL}" style="height: 40px; width: 40px;"></div>
             <a href="${this.url}" role="button" class="stretched-link" id="data-ref" data-ref="${this.key}"></a>
-            <div class="mx-2 c-details"><h6 class="mb-0" id="WScreator">${this.creator}</h6></div>
+            <div class="mx-2 c-details"><h6 class="mb-0" id="WScreator">${this.creatorName}</h6></div>
           </div>
           <div>
             <span class="text1 text-muted mb-2" id="WSdate">${this.dateCreated}</span>
@@ -351,7 +436,8 @@ const UIDisplayWorkSheetCard = {
     this.key = value.key;
     this.name = value.name;
     this.dateCreated = value.dateCreated;
-    this.creator = value.creator;
+    this.creatorName = value.creatorName;
+    this.creatorPhotoURL = value.creatorPhotoURL;
     this.questionCount = value.questionCount;
     this.tagPrimary = value.tagPrimary;
     this.tagSecondary = value.tagSecondary;

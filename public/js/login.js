@@ -60,7 +60,6 @@ function UIData() {
     }
   }
 
-
 // this function 
 function login() {
     var provider = new firebase.auth.GoogleAuthProvider();
@@ -102,13 +101,14 @@ firebase.auth().signOut().then(function() {
   });
 }
 
+
 // adds selected question into the user worksheet folder
 // invoked by the button on the worksheet.html - question card
-function addQuestionToWS(url, file_name, correct_answer, count) {
-    firebase.database().ref('users/' + uid + '/worksheet/' + file_name.replace(".jpg", "")).set({
-        article_url: "",
-        correct_answer: correct_answer,
-        file_name: file_name.replace(".jpg", "")
+function addQuestionToWS(questionArticleUrl, questionFileName, questionCorrectAnswer, count) {
+    firebase.database().ref('users/' + uid + '/worksheet/' + questionFileName.replace(".jpg", "")).set({
+        article_url: questionArticleUrl,
+        correct_answer: questionCorrectAnswer,
+        file_name: questionFileName.replace(".jpg", "")
     }, function (error) {
         if (error) {
             // The write failed...
@@ -146,27 +146,20 @@ function writeViewCountToFirebase(key, viewNumber) {
           $("#ws_view").html(( viewNumber + 1) + ' views ')  
         }
     });
-  }
+}
 
 // removes one single selected question from the user worksheet folder
 // removed the question card as well in the worksheet-view.html
 // invoked in the worksheet-view.html with remove button on the question card
-function removeQuestionFromWS(thisCard, url, file_name, correct_answer, count) {
-    firebase.database().ref('users/' + uid + '/worksheet/' + file_name.replace(".jpg", "")).remove().then(function () {
+
+function removeQuestionFromWS(thisCard, questionArticleUrl, questionFileName, questionCorrectAnswer, count) {
+    firebase.database().ref('users/' + uid + '/worksheet/' + questionFileName.replace(".jpg", "")).remove().then(function () {
         console.log("Remove succeeded.")
-
         $('#ws-question-count').html(parseInt($('#ws-question-count').html(), 10) - 1)
-        $("#success-remove-alert").fadeTo(2000, 50).slideUp(50, function () {
-            $("#success-remove-alert").slideUp(50);
-        });
-
+        $("#success-remove-alert").fadeTo(2000, 50).slideUp(50, function () {$("#success-remove-alert").slideUp(50);});
         thisCard.remove();
-
     })
-        .catch(function (error) {
-            console.log("Remove failed: " + error.message)
-
-        });
+        .catch(function (error) {console.log("Remove failed: " + error.message)});
 }
 
 // adds one single question data into the worksheets and worksheets_cat folder
@@ -295,7 +288,6 @@ function getQuestionsInWS() {
 function getUserfromDatabase(uid, displayName, email, photoURL) {
     firebase.database().ref('users/' + uid + '/').once("value", snapshot => {
         if (snapshot.exists()) {
-
             console.log("User exists!");
             console.log(snapshot);
 
@@ -304,14 +296,12 @@ function getUserfromDatabase(uid, displayName, email, photoURL) {
             }
             getQuestionsInWS(uid)
 
-            //$("#your-profile").html(displayName);
-
         } else {
             firebase.database().ref('users/' + uid + '/').set({
                 "displayName": displayName,
                 "email": email,
+                "userPhotoURL": photoURL,
             });
-            
         }
     });
 }
@@ -327,8 +317,6 @@ function addUserQuestionAnswered(file_name, correct_answer, user_answer) {
         "date": today.toLocaleString('en-US', options)
     });
 }
-
-
 
 $(document).ready(function () {
     console.log("document loaded");
@@ -356,7 +344,5 @@ $(document).ready(function () {
         e.preventDefault(); 
         logout()
       });
-
-//  document.getElementById("data-ref").click(); 
 
 });

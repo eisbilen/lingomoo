@@ -33,20 +33,24 @@ UIDisplayPagination.pagination = {  HTMLButtonClassPreviousButton: "btn btn-prim
                                     paginationTotalCountDBREF: "/questions_cat/VERB",
                                   }
 
-UIDisplayPagination.paginationTotalCountDBREF = "/questions_cat/VERB"
-changeWSCreatePOS(UIDisplayPagination.paginationTotalCountDBREF)
+getTotalCount("/questions_cat/VERB", "").then((result) => {
+    UIDisplayPagination.paginationTotalCount = Object.keys(result).length;
+    UIDisplayPagination.insertPagination();
+    UIDisplayPagination.updatePaginationButtons();
+})
+
 dbref = firebase.database().ref("/questions/VERB").orderByKey();
 changeCreateListElements(dbref, "VERB")
 ////////////////////////////////////////////////
 
-//$(function () {
-//    $('[data-toggle="tooltip"]').tooltip()
-//})
+$(function () {
+   $('[data-toggle="tooltip"]').tooltip()
+})
 
-//$(document).ready(function () {
-//  $("#max-alert").hide();
-//  $(".btn-group :input").change(function () {
-//      console.log(this); // points to the clicked input button
-//  });
-//});
+$(document).ready(function () {
+  $("#max-alert").hide();
+  $(".btn-group :input").change(function () {
+      console.log(this); // points to the clicked input button
+  });
+});
 

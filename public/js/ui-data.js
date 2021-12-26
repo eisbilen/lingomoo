@@ -1,7 +1,7 @@
 /////////////////// DATA ITEMS FOR STUDY-WORKSHEET.HTML ///////////////////
 // this object represent the QUESTION cards for WEB UI
 function QuestionCardData() {
-  
+
     this.paginationCursor = function () {}
   
     this.getQuestionCount = async function (databaseRef, key) {
@@ -32,6 +32,7 @@ function QuestionCardData() {
         cardData['HTMLImageStyleTick'] = ""
         cardData['HTMLButtonGroupStyleQuestionOptions'] = ""
         cardData['HTMLButtonStyleCheckQuestionAnswer'] = ""
+        cardData['HTMLButtonStyleUserAnswer'] = ""
         cardData['HTMLImageClassQuestionCard'] = "card-img-top"
         arrangedData.push(cardData)
         questionIndex += 1
@@ -46,10 +47,11 @@ function QuestionCardData() {
       const arrangedData = this.arrangeData(result)
       document.getElementById('question-cards').innerHTML = "";
       arrangedData.then((result) => {result.forEach(async function (cardData, index) {
-        const userAnswer = await getAnsweredQuestionData(cardData['questionFileName'], user.uid)
+      const userAnswer = await getAnsweredQuestionData(cardData['questionFileName'], user.uid)
         
         if (userAnswer) {
           const imageDisplay = await setHTMLStyleForTickCross(userAnswer)
+          console.log(imageDisplay)
           cardData['HTMLImageStyleTick'] = imageDisplay[0]
           cardData['HTMLImageStyleCross'] = imageDisplay[1]
   
@@ -58,6 +60,9 @@ function QuestionCardData() {
           cardData['HTMLImageClassQuestionCard'] = "card-img answered"
           cardData['HTMLButtonGroupStyleQuestionOptions'] = "display:none;"
           cardData['HTMLButtonStyleCheckQuestionAnswer'] = "display:none;"
+          cardData['HTMLButtonStyleUserAnswer'] = "display:none;"
+   
+
         } 
         else {
           const gsReferenceQuestionImage = storage.refFromURL("gs://lingomoo.appspot.com/images/" + cardData['questionFileName']+'.jpg');
@@ -66,7 +71,7 @@ function QuestionCardData() {
   
         UIDisplayQuestionCard.card = cardData;
         UIDisplayQuestionCard.insertCard();
-        //updateTitleAndProcessBar();
+        updateTitleAndProcessBar();
         })
       })
     }
@@ -92,6 +97,7 @@ function QuestionWSCreationCardData() {
     for (let key in data) {
       const cardData = {}
       cardData['questionIndex'] = questionIndex
+      cardData['questionCorrectAnswer'] = data[key]['correct_answer']
       cardData['questionArticleUrl'] = data[key]['article_url']
       cardData['questionFileName'] = data[key]['file_name']
       cardData['HTMLContainerIDQuestionCardsTopLevel'] = "question-cards"
@@ -117,9 +123,47 @@ function QuestionWSCreationCardData() {
     })
   }
 }
+function QuestionWSSaveCardData() {
+
+  this.getData = function (databaseRef, key)  {
+    return getFirebaseData(databaseRef, key)
+  }
+  
+  this.arrangeData = async function (data) {
+    const arrangedData = []
+    let questionIndex = 0
+
+    for (let key in data) {
+      const cardData = {}
+      cardData['questionIndex'] = questionIndex
+      cardData['questionCorrectAnswer'] = data[key]['correct_answer']
+      cardData['questionArticleUrl'] = data[key]['article_url']
+      cardData['questionFileName'] = data[key]['file_name']
+      cardData['HTMLContainerIDQuestionCardsTopLevel'] = "question-cards"
+      cardData['HTMLImageClassQuestionCard'] = "card-img-top"
+      arrangedData.push(cardData)
+      questionIndex += 1
+    }
+    totalQuestionCount = questionIndex;
+    return arrangedData
+  }
+  
+  this.createCards = async function (result) {
+    const storage = firebase.storage();
+    const arrangedData = this.arrangeData(result)
+    document.getElementById('question-cards').innerHTML = "";
+    arrangedData.then((result) => {result.forEach(async function (cardData, index) {
+      const gsReferenceQuestionImage = storage.refFromURL("gs://lingomoo.appspot.com/images/" + cardData['questionFileName']+'.jpg');
+      cardData['questionImageUrl'] = await gsReferenceQuestionImage.getDownloadURL();
+      UIDisplayQuestionWSSaveCard.card = cardData;
+      UIDisplayQuestionWSSaveCard.insertCard();
+      })
+    })
+  }
+}
+
 // this object represent the PROGRESS BAR for WEB UI
 function ProgressBarData() {
-  
     this.getProgressBarData = function ()  {
       return {percentageCorrectAnswer: Math.round((countCorrectAnswer/totalQuestionCount) * 100),
               percentageWrongAnswer:  Math.round((countWrongAnswer/totalQuestionCount) * 100),
@@ -171,21 +215,25 @@ function WorksheetCardData() {
         return getFirebaseDataWithPagination(cursor, button)
     }
   
-    this.arrangeData = function (data) {
+    this.arrangeData = async function (data) {
       arrangedData = []
       console.log(data)
       document.getElementById('into').innerHTML = "";
       for (let key in data) {
         console.log(key)
+        user = await getCreatorNameByKey(findWScreator(key));
+        console.log(user)
         cardData = {}
         cardData['key'] = key;
         cardData['name'] = findWSname(key);
         cardData['dateCreated'] = timeSince(findWSdate(key));
-        cardData['creator'] = findWScreator(key);
+        cardData['creatorName'] = user["displayName"]
         cardData['questionCount'] = findWSquestioncount(key);
         cardData['HTMLContainerIDWorksheetCardsTopLevel'] = 'into';
         cardData['tagPrimary'] = findWStag1(key);
         cardData['tagSecondary'] = findWStag2(key);
+        cardData['creatorPhotoURL'] = user["userPhotoURL"];
+
         arrangedData.push(cardData)
       }
       return arrangedData
@@ -194,10 +242,11 @@ function WorksheetCardData() {
     this.createCards = async function (result) {
         await getTotalCount("/worksheets/", "").then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
 
-        const arrangedData = cardUiData.arrangeData(result)        
-        arrangedData.forEach(function (cardData, index) {
-          UIDisplayWorkSheetCard.card = cardData;
-          UIDisplayWorkSheetCard.insertCard();
+        cardUiData.arrangeData(result).then((result)  => {      
+          result.forEach(function (cardData, index) {
+            UIDisplayWorkSheetCard.card = cardData;
+            UIDisplayWorkSheetCard.insertCard();
+          });
         });
       }
 }

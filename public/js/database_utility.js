@@ -38,8 +38,8 @@ function changeWSCreatePOS(ref) {
   cardUiData.getDataWithPagination(cursor,'next').then(result => {cardUiData.createCards(result)});
   getTotalCount(ref, "").then((result) => {
     UIDisplayPagination.paginationTotalCount = Object.keys(result).length;
-  UIDisplayPagination.insertPagination();
-  UIDisplayPagination.updatePaginationButtons();
+    UIDisplayPagination.insertPagination();
+    UIDisplayPagination.updatePaginationButtons();
   })
 
 }
@@ -56,7 +56,7 @@ function changeCreateListElements(ref,POS) {
       createListElements(ss.key, POS) 
     });
   });
-  $("html, body").animate({scrollTop: $("#browse-PoS").offset().top - 20,},500);
+  //$("html, body").animate({scrollTop: $("#browse-PoS").offset().top - 20,},500);
 }
 
 // this is a general utility function that gets a firebase snapshot and returns objects with key and value pairs
@@ -93,6 +93,12 @@ async function getFirebaseDataWithPagination(cursor, button){
   if (button=='previous') {response = await cursor.previous().then((data) => {return data;});}
   return await response.snap
   //return await snapshotToArray(response.snap)
+}
+
+async function getCreatorNameByKey(key) {
+  const response = await firebase.database().ref("users/" + key).once("value").then((snap) =>  {return snap.val()});
+  console.log(response)
+  return response
 }
 
 // This funtion populates the button click events for the
@@ -154,24 +160,12 @@ function addAnswer(url) {
 // This function gets the question_answered image from firebase storage
 // And assign it to the element which is the image of question
 function setAnswerImageToQuestion(answer_file_name, element) {
-  var storage = firebase.storage();
+  let storage = firebase.storage();
   // Create a reference from a Google Cloud Storage URI
-  var gsReference_answer = storage.refFromURL(
-    "gs://lingomoo.appspot.com/images/" +
-      answer_file_name.replace("question", "answer") + ".jpg"
-  );
-
-  gsReference_answer
-    .getDownloadURL()
-    .then(function (url) {
-      element.attr("src", url);
-    })
-    .catch(function (error) {
-      // Handle any errors
-    });
+  let gsReference_answer = storage.refFromURL("gs://lingomoo.appspot.com/images/" + answer_file_name.replace("question", "answer") + ".jpg");
+  gsReference_answer.getDownloadURL().then(function (url) {element.attr("src", url);}).catch(function (error) {});
   element.attr("class", "card-img answered");
 }
-
 // This function gets the question_answered image from firebase storage
 // And assign return the url
 function getAnswerImageURL(questionFileName) {
@@ -192,7 +186,6 @@ returnAnsweredQuestionsDataObjectForUser = async function () {
   }
 }
 
-
 // This function gets the filter keywords and
 // Calls createListElements for VERB to show them on screen
 function getFilterData(dbref) {
@@ -207,9 +200,6 @@ function getFilterData(dbref) {
     });
   });
 }
-
-
-
 
 function timeSince(date) {
   if (typeof date !== 'object') {
@@ -250,10 +240,15 @@ function timeSince(date) {
   if (interval > 1 || interval === 0) {
     intervalType += 's';
   }
-
   return interval + ' ' + intervalType + ' ago';
 };
 
+function abcdTo1234(answerInNumber) {
+  if (answerInNumber == 0) {return "A"}
+  if (answerInNumber == 1) {return "B"}
+  if (answerInNumber == 2) {return "C"}
+  if (answerInNumber == 3) {return "D"}
+}
 
 function updateTitleAndProcessBar() {
   UIDisplayProgressBar.progressBar = studyViewPagePBData.getProgressBarData();
@@ -262,13 +257,14 @@ function updateTitleAndProcessBar() {
   UIDisplayWorksheetTitle.worksheetTitle = studyViewPageWTData.getWorksheetTitleData();
   UIDisplayWorksheetTitle.updateWorksheetTitle();
   }
-  
-  
-  function setHTMLStyleForTickCross(userAnsweredQuestionData) {
+   
+function setHTMLStyleForTickCross(userAnsweredQuestionData) {
     let HTMLImageStyleTick = ""
     let HTMLImageStyleCross = ""
   
-    if (userAnsweredQuestionData["correct_answer"] == userAnswerGLOBAL) {
+    console.log(userAnsweredQuestionData)
+    console.log(userAnswerGLOBAL)
+    if (userAnsweredQuestionData["correct_answer"] == userAnsweredQuestionData["user_answer"]) {
       console.log("Dogru Cevap");
       countCorrectAnswer += 1;
       HTMLImageStyleTick = "display: inline;"
@@ -283,13 +279,13 @@ function updateTitleAndProcessBar() {
       UIDisplayProgressBar.updateProgressBar();
     }
     return [HTMLImageStyleTick, HTMLImageStyleCross]
-  }
+}
   
-  function getAnsweredQuestionData(questionFileName, userID) {
+function getAnsweredQuestionData(questionFileName, userID) {
     return firebase.database().ref('users/' + userID + '/questions-answered/' + questionFileName.replace(".jpg", "")).once("value").then((snap) => {return snap.val()})
-  }
+}
   
-  function displayWorksheetProgress() {
+function displayWorksheetProgress() {
     if (totalQuestionCount !== 0) {
       Cper = (countCorrectAnswer / totalQuestionCount_cursor) * 100;
     } else {
@@ -316,9 +312,9 @@ function updateTitleAndProcessBar() {
         totalQuestionCount_cursor +
         " is completed"
     );
-  }
+}
   
-  function increaseWorksheetViewCount(key) {
+function increaseWorksheetViewCount(key) {
     firebase
       .database()
       .ref("worksheets-statistics/" + key)
@@ -329,14 +325,11 @@ function updateTitleAndProcessBar() {
           writeViewCountToFirebase(key, viewNumber);
         });
       });
-  }
+}
   
-  function writeViewCountToFirebase(key, viewNumber) {
+function writeViewCountToFirebase(key, viewNumber) {
   
-    firebase
-      .database()
-      .ref("worksheets-statistics/" + key)
-      .set(
+    firebase.database().ref("worksheets-statistics/" + key).set(
         {
           view: viewNumber + 1,
         },
@@ -349,4 +342,4 @@ function updateTitleAndProcessBar() {
           }
         }
       );
-  }
+}
