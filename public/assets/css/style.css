@@ -261,6 +261,9 @@ body {
   color: rgb(255, 255, 255) !important;
   font-size: larger;
 }
+img {
+  border-radius: 4%;
+}
 
 .btn.btn-group {
   display: none;
