@@ -11,11 +11,19 @@ const UIDisplayWorksheetTitle = {
       document.getElementById(this.HTMLContainerIDWorksheetTitle).innerHTML = this.worksheetTitle;
     },
   
+    
+
+
+    //mr-auto text-left lingoo-statistics font-weight-light"><i class="bx bx-id-card
+
     get worksheetTitle() {
-      return `<div class="container d-flex align-items-center mt-5">
-                <h3 id="study_label" class="mr-auto text-left lingoo-statistics font-weight-light"><i class="bx bx-id-card"></i> ${this.worksheetName}</h3>
-                <h4 id="progress_label" class="mr-auto  text-center align-middle lingoo-statistics font-weight-light"><i class="bx bx-trending-up"></i> ${this.countAnsweredQuestion} of ${this.totalQuestionCount} is completed</h4>
-                <h3 id="tags_label" class="text-rigth align-middle lingoo-statistics font-weight-light"><i class="bx bx-purchase-tag-alt"></i> ${this.worksheetTag1} - ${this.worksheetTag2}</h3>
+      return `<div class="container mt-5">
+
+              <div class="row">
+                <span id="study_label" class="text2 col-lg-4 pt-4 pt-lg-0 order-1 order-lg-1 d-flex flex-column text-center justify-content-center"><i class="bx bx-id-card"></i> ${this.worksheetName}</span>
+                <span id="progress_label" class="text2 col-lg-4 pt-4 pt-lg-0 order-1 order-lg-1 d-flex flex-column text-center justify-content-center"><i class="bx bx-trending-up"></i> ${this.countAnsweredQuestion} of ${this.totalQuestionCount} is completed</span>
+                <span id="tags_label" class="text2 col-lg-4 pt-4 pt-lg-0 order-1 order-lg-1 d-flex flex-column text-center justify-content-center"><i class="bx bx-purchase-tag-alt"></i> ${this.worksheetTag1} - ${this.worksheetTag2}</span>
+                </div>
               </div>`;
     },
   
@@ -349,18 +357,15 @@ const UIDisplayPagination = {
         });
       }  
     },
+
+    //<div class="col-lg-3 pt-4 pt-lg-0 order-1 order-lg-1 d-flex flex-column justify-content-center">
+    //</div>
   
     get pagination() {
-      return `<div class="row">
-                <div class="col-1 text-center">
-                  <a id="previous-button" class="${this.HTMLButtonClassPreviousButton} btn-sm" href="#" role="button">Previous</a>
-                </div>
-                <div class="col-1 text-center">
-                  <a id="next-button" class="${this.HTMLButtonClassNextButton} btn-sm" href="#" role="button">Next</a>
-                </div>
-                <div class="col-10 text-muted text-right">
-                  <span>Page ${this.paginationPage},  ${this.paginationCursor.firstIndex}-${this.paginationCursor.lastIndex} of ${this.paginationTotalCount} worksheets</span>
-                </div>  
+      return `<div class="row justify-content-center">
+                <button id="previous-button" class="${this.HTMLButtonClassPreviousButton} m-2 rounded-circle btn-sm" href="#" type="button"><i class='bx bxs-left-arrow-alt'></i></button>
+                <span class="m-2">  Page ${this.paginationPage},  ${this.paginationCursor.firstIndex}-${this.paginationCursor.lastIndex} of ${this.paginationTotalCount}  </span>
+                <button id="next-button" class="${this.HTMLButtonClassNextButton} m-2 rounded-circle btn-sm" href="#" type="button"><i class='bx bxs-right-arrow-alt'></i></button>
               </div>`;
     },
   
@@ -402,7 +407,7 @@ const UIDisplayWorkSheetCard = {
   HTMLContainerIDWorksheetCardsTopLevel: "",
   
   get card() {
-    return `<div class="col-6 mb-3">
+    return `<div class="col-lg-6 pt-4 pt-lg-0 order-1 order-lg-1 d-flex flex-column justify-content-center">
       <div class="card ws p-3 mb-1">
         <div class="d-flex justify-content-between">
           <div class="d-flex flex-row align-items-center">
@@ -418,13 +423,11 @@ const UIDisplayWorkSheetCard = {
         <div class="mt-5">
           <h3 class="heading" id="WSname">${this.name}</h3>
           <div class="d-flex align-items-center">
-            <div class="mr-auto mt-2">
-              <span class="text2 text-muted pull-right">${this.questionCount} questions<span class="text2"></span></span>
-            </div>
-            <div>
-              <a class="bx bx-purchase-tag-alt"> </a>
-            </div>
-            <span class="text2 text-muted pull-right"> ${this.tagPrimary} - ${this.tagSecondary}</span>
+            <div class="mr-auto">
+              <span class="text2 text-muted pull-left"><i class='bx bx-collection'></i>${this.questionCount} questions</span>
+              <div>
+                <span class="text2 text-muted pull-right"><i class="bx bx-purchase-tag-alt"></i>${this.tagPrimary} - ${this.tagSecondary}</span>
+              </div>
           </div>
         </div>
       </div>

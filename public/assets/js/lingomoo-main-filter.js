@@ -1,6 +1,7 @@
 // lingomoo-main-filter.js
 
 const template = document.createElement("template");
+
 template.innerHTML = ` 
 <!-- Vendor CSS Files -->
 <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -11,6 +12,7 @@ template.innerHTML = `
 <script src="../assets/vendor/jquery/jquery.min.js"></script>
 <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+<link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
 
 <div class="container mt-4">
 <div class="row row-cols-1 row-cols-md-3">
@@ -19,6 +21,7 @@ template.innerHTML = `
     <div class="card filter">
       <div class="card-body">
         <h5 class="card-title justify-content-center">VERBS</h5>
+        <p id="verb-filter" class="card-text text-rigth align-middle lingoo-statistics font-weight-light"></i></p>
         <a id="filter1" href="#" class="stretched-link" role="button"></a>
       </div>
     </div>
@@ -28,6 +31,7 @@ template.innerHTML = `
     <div class="card filter">
       <div class="card-body">
         <h5 class="card-title justify-content-center">NOUNS</h5>
+        <p id="noun-filter" class="card-text text-rigth align-middle lingoo-statistics font-weight-light"></i></p>
         <a id="filter2" href="#" class="stretched-link" role="button"></a>
       </div>
     </div>
@@ -37,6 +41,7 @@ template.innerHTML = `
   <div class="card filter">
     <div class="card-body">
       <h5 class="card-title justify-content-center">ADJECTIVES</h5>
+      <p id="adjective-filter" class="card-text text-rigth align-middle lingoo-statistics font-weight-light"></i></p>
       <a id="filter3" href="#" class="stretched-link" role="button"></a>
     </div>
   </div>
@@ -46,6 +51,7 @@ template.innerHTML = `
 <div class="card filter">
   <div class="card-body">
     <h5 class="card-title justify-content-center">ADVERBS</h5>
+    <p id="adverb-filter" class="card-text text-rigth align-middle lingoo-statistics font-weight-light"></i></p>
     <a id="filter4" href="#" class="stretched-link" role="button"></a>
   </div>
 </div>
@@ -55,6 +61,7 @@ template.innerHTML = `
 <div class="card filter">
   <div class="card-body">
     <h5 class="card-title justify-content-center">PREPOSITIONS</h5>
+    <p id="preposition-filter" class="card-text text-rigth align-middle lingoo-statistics font-weight-light"</p>
     <a id="filter5" href="#" class="stretched-link" role="button"></a>
   </div>
 </div>
@@ -64,6 +71,7 @@ template.innerHTML = `
 <div class="card filter">
   <div class="card-body">
     <h5 class="card-title justify-content-center">AUXILIARY VERBS</h5>
+    <p id="aux-filter" class="card-text text-rigth align-middle lingoo-statistics font-weight-light"></p>
     <a id="filter6" href="#" class="stretched-link" role="button"></a>
   </div>
 </div>

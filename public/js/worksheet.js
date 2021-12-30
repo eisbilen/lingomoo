@@ -34,9 +34,14 @@ UIDisplayPagination.pagination = {  HTMLButtonClassPreviousButton: "btn btn-prim
                                   }
 
 getTotalCount("/questions_cat/VERB", "").then((result) => {
+
+
     UIDisplayPagination.paginationTotalCount = Object.keys(result).length;
     UIDisplayPagination.insertPagination();
     UIDisplayPagination.updatePaginationButtons();
+
+    
+
 })
 
 dbref = firebase.database().ref("/questions/VERB").orderByKey();
@@ -48,6 +53,9 @@ $(function () {
 })
 
 $(document).ready(function () {
+
+
+  
   $("#max-alert").hide();
   $(".btn-group :input").change(function () {
       console.log(this); // points to the clicked input button

@@ -115,7 +115,7 @@ $(document).ready(function () {
             console.log("user already signed in")
             console.log(user)
             uid = user.uid;
-            window.location.href = "http://www.lingomoo.com/worksheet.html";
+            window.location.href = "http://www.lingomoo.com/study.html";
         } else {
             console.log("user signed out")
         }

@@ -218,7 +218,7 @@ function WorksheetCardData() {
     this.arrangeData = async function (data) {
       arrangedData = []
       console.log(data)
-      document.getElementById('into').innerHTML = "";
+
       for (let key in data) {
         console.log(key)
         user = await getCreatorNameByKey(findWScreator(key));
@@ -241,7 +241,7 @@ function WorksheetCardData() {
 
     this.createCards = async function (result) {
         await getTotalCount("/worksheets/", "").then((result) => {UIDisplayPagination.paginationTotalCount = Object.keys(result).length})
-
+        document.getElementById('into').innerHTML = "";
         cardUiData.arrangeData(result).then((result)  => {      
           result.forEach(function (cardData, index) {
             UIDisplayWorkSheetCard.card = cardData;
