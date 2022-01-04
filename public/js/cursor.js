@@ -63,6 +63,9 @@ class Cursor {
       this.displayIndex();
     }
 
+    console.log("data-loading-in-cursor-next()")
+    console.log(ref)
+
     return ref.once("value").then((snap) => {
       const keys = [];
       const data = [];
@@ -138,7 +141,8 @@ class Cursor {
     } else {
       return;
     }
-
+    console.log("data-loading-in-cursor-previous()")
+    console.log(ref)
     return ref.once("value").then((snap) => {
       const keys = [];
       const data = []; // store data in array so it's ordered

@@ -20,7 +20,7 @@ template.innerHTML = `
   <div class="col p-3">
     <div class="card filter">
       <div class="card-body">
-        <h5 class="card-title justify-content-center">VERBS</h5>
+        <h5 class="card-title justify-content-center">Verbs</h5>
         <p id="verb-filter" class="card-text text-rigth align-middle lingoo-statistics font-weight-light"></i></p>
         <a id="filter1" href="#" class="stretched-link" role="button"></a>
       </div>
@@ -30,7 +30,7 @@ template.innerHTML = `
   <div class="col p-3">
     <div class="card filter">
       <div class="card-body">
-        <h5 class="card-title justify-content-center">NOUNS</h5>
+        <h5 class="card-title justify-content-center">Nouns</h5>
         <p id="noun-filter" class="card-text text-rigth align-middle lingoo-statistics font-weight-light"></i></p>
         <a id="filter2" href="#" class="stretched-link" role="button"></a>
       </div>
@@ -40,7 +40,7 @@ template.innerHTML = `
   <div class="col p-3">
   <div class="card filter">
     <div class="card-body">
-      <h5 class="card-title justify-content-center">ADJECTIVES</h5>
+      <h5 class="card-title justify-content-center">Adjectives</h5>
       <p id="adjective-filter" class="card-text text-rigth align-middle lingoo-statistics font-weight-light"></i></p>
       <a id="filter3" href="#" class="stretched-link" role="button"></a>
     </div>
@@ -50,7 +50,7 @@ template.innerHTML = `
 <div class="col p-3">
 <div class="card filter">
   <div class="card-body">
-    <h5 class="card-title justify-content-center">ADVERBS</h5>
+    <h5 class="card-title justify-content-center">Adverbs</h5>
     <p id="adverb-filter" class="card-text text-rigth align-middle lingoo-statistics font-weight-light"></i></p>
     <a id="filter4" href="#" class="stretched-link" role="button"></a>
   </div>
@@ -60,7 +60,7 @@ template.innerHTML = `
 <div class="col p-3">
 <div class="card filter">
   <div class="card-body">
-    <h5 class="card-title justify-content-center">PREPOSITIONS</h5>
+    <h5 class="card-title justify-content-center">Prepositions</h5>
     <p id="preposition-filter" class="card-text text-rigth align-middle lingoo-statistics font-weight-light"</p>
     <a id="filter5" href="#" class="stretched-link" role="button"></a>
   </div>
@@ -70,9 +70,19 @@ template.innerHTML = `
 <div class="col p-3">
 <div class="card filter">
   <div class="card-body">
-    <h5 class="card-title justify-content-center">AUXILIARY VERBS</h5>
+    <h5 class="card-title justify-content-center">Auxiliary Verbs</h5>
     <p id="aux-filter" class="card-text text-rigth align-middle lingoo-statistics font-weight-light"></p>
     <a id="filter6" href="#" class="stretched-link" role="button"></a>
+  </div>
+</div>
+</div>
+
+<div class="col p-3">
+<div class="card filter">
+  <div class="card-body">
+    <h5 class="card-title justify-content-center">Determiners</h5>
+    <p id="det-filter" class="card-text text-rigth align-middle lingoo-statistics font-weight-light"></p>
+    <a id="filter7" href="#" class="stretched-link" role="button"></a>
   </div>
 </div>
 </div>
@@ -139,6 +149,16 @@ customElements.define(
         dbref = firebase.database().ref("/questions/AUX").orderByKey();
         changeCreateListElements(dbref, "AUX")
       };
+
+      this.$("#filter7").onclick = function () {
+        UIDisplayPagination.paginationTotalCountDBREF = "/questions_cat/DETERMINER"
+        changeWSCreatePOS(UIDisplayPagination.paginationTotalCountDBREF)
+
+        dbref = firebase.database().ref("/questions/DETERMINER").orderByKey();
+        changeCreateListElements(dbref, "DETERMINER")
+      };
+
+
     }
     connectedCallback() {
         $("#pre-list").innerHTML = '';

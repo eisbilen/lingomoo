@@ -45,10 +45,15 @@ function changeWSCreatePOS(ref) {
 }
 
 function changeCreateListElements(ref,POS) {
+
+  console.log("data-loading-in-changeCreateListElements()")
+  console.log(ref)
   $("#pre-list").html("");
   ref.once("value").then((snap) => {
     const keys = [];
     const data = [];
+    console.log(snap)
+    
     // store data in array so it's ordered
     snap.forEach((ss) => {
       data.push(ss.val());
@@ -73,16 +78,28 @@ async function snapshotToArray(snapshot) {
 // this is a general utility function that uses 'databaseRef' and 'limitToLastValue' for firebase database query
 // and returns the result of query as objects with key value pairs 
 async function getFirebaseDataWithLimitToLast(databaseRef, limitToLastValue){
+
+  console.log("data-loading-in-getFirebaseDataWithLimitToLast")
+  console.log(databaseRef)
+
   const response = await firebase.database().ref(databaseRef).limitToLast(limitToLastValue).once("value").then((snap) =>  {return snap});
   return await snapshotToArray(response)
 }
 
 async function getFirebaseData(databaseRef, key){
+
+  console.log("data-loading-in-getFirebaseData()")
+  console.log(databaseRef + key)
+
   const response = await firebase.database().ref(databaseRef + key).once("value").then((snap) =>  {return snap});
   return await snapshotToArray(response)
 }
 
 async function getTotalCount(databaseRef, key){
+
+  console.log("data-loading-in-getTotalCount()")
+  console.log(databaseRef + key)
+
   const response = await firebase.database().ref(databaseRef + key).once("value").then((snap) =>  {return snap});
   return await snapshotToArray(response)
 }
@@ -96,6 +113,10 @@ async function getFirebaseDataWithPagination(cursor, button){
 }
 
 async function getCreatorNameByKey(key) {
+
+  console.log("data-loading-in-getCreatorNameByKey")
+  console.log('users'+ key)
+
   const response = await firebase.database().ref("users/" + key).once("value").then((snap) =>  {return snap.val()});
   console.log(response)
   return response
@@ -177,6 +198,10 @@ function getAnswerImageURL(questionFileName) {
 
 // This function returns answered questions data object for the active user
 returnAnsweredQuestionsDataObjectForUser = async function () {
+
+  console.log("data-loading-in-returnAnsweredQuestionsDataObjectForUser()")
+  console.log('users/' + uid + '/questions-answered/')
+
   const ref = firebase.database().ref('users/' + uid + '/questions-answered/')
   try {
       let snapshot = await ref.once("value");
@@ -189,6 +214,10 @@ returnAnsweredQuestionsDataObjectForUser = async function () {
 // This function gets the filter keywords and
 // Calls createListElements for VERB to show them on screen
 function getFilterData(dbref) {
+
+  console.log("data-loading-in-getFilterData())")
+  console.log(dbref)
+
   dbref.once("value").then((snap) => {
     const keys = [];
     const data = [];
@@ -282,7 +311,11 @@ function setHTMLStyleForTickCross(userAnsweredQuestionData) {
 }
   
 function getAnsweredQuestionData(questionFileName, userID) {
-    return firebase.database().ref('users/' + userID + '/questions-answered/' + questionFileName.replace(".jpg", "")).once("value").then((snap) => {return snap.val()})
+
+  console.log("data-loading-in-rgetAnsweredQuestionData()")
+  console.log('users/' + userID + '/questions-answered/' + questionFileName.replace(".jpg", ""))
+
+  return firebase.database().ref('users/' + userID + '/questions-answered/' + questionFileName.replace(".jpg", "")).once("value").then((snap) => {return snap.val()})
 }
   
 function displayWorksheetProgress() {
@@ -315,6 +348,10 @@ function displayWorksheetProgress() {
 }
   
 function increaseWorksheetViewCount(key) {
+
+  console.log("data-loading-in-increaseWorksheetViewCount()")
+  console.log("worksheets-statistics/" + key)
+
     firebase
       .database()
       .ref("worksheets-statistics/" + key)

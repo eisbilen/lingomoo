@@ -210,6 +210,12 @@ function writeSingleToLibrary(key_main, key, data) {
 // removes the questions in users/worksheet onces they are stored in worksheets node
 // invoked by the 'save worksheet' button on the worksheet-view.html
 async function writeWS(wsname, wsdatetime, tag1, tag2, count) {
+
+    console.log("data-loading-in-writeWS()")
+    console.log('users/' + uid + '/worksheet')
+
+    
+
 firebase.database().ref('users/' + uid + '/worksheet').once("value", snapshot => {
     if (snapshot.exists()) {
         snapshot.forEach(ss => {
@@ -244,6 +250,10 @@ function libraryFailAlert(){
 // then loops thoroug that WS item and copy all questions and the WS key into users/uis/my-library node
 // invoked by the 'add to my library' button on study.html
 async function writeToLibrary(key) {
+
+    console.log("data-loading-in-writeToLibrary()")
+    console.log('worksheets/' + key)
+
     firebase.database().ref('worksheets/' + key).once("value", snapshot => {
         if (snapshot.exists()) {
             snapshot.forEach(ss => {
@@ -258,6 +268,11 @@ async function writeToLibrary(key) {
 }
 
 function getQuestionsInWS() {
+
+    console.log("data-loading-in-getQuestionsInWS()")
+    console.log('users/' + uid + '/worksheet')
+
+
     firebase.database().ref('users/' + uid + '/worksheet').once("value", snapshot => {
         if (snapshot.exists()) {
             const keys = [];
@@ -286,6 +301,11 @@ function getQuestionsInWS() {
 }
 
 function getUserfromDatabase(uid, displayName, email, photoURL) {
+
+    console.log("data-loading-in-getUserfromDatabase()")
+    console.log('users/' + uid + '/')
+
+
     firebase.database().ref('users/' + uid + '/').once("value", snapshot => {
         if (snapshot.exists()) {
             console.log("User exists!");

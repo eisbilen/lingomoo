@@ -17,12 +17,12 @@ const UIDisplayWorksheetTitle = {
     //mr-auto text-left lingoo-statistics font-weight-light"><i class="bx bx-id-card
 
     get worksheetTitle() {
-      return `<div class="container mt-5">
+      return `<div class="container mt-2">
 
               <div class="row">
-                <span id="study_label" class="text2 col-lg-4 pt-4 pt-lg-0 order-1 order-lg-1 d-flex flex-column text-center justify-content-center"><i class="bx bx-id-card"></i> ${this.worksheetName}</span>
-                <span id="progress_label" class="text2 col-lg-4 pt-4 pt-lg-0 order-1 order-lg-1 d-flex flex-column text-center justify-content-center"><i class="bx bx-trending-up"></i> ${this.countAnsweredQuestion} of ${this.totalQuestionCount} is completed</span>
-                <span id="tags_label" class="text2 col-lg-4 pt-4 pt-lg-0 order-1 order-lg-1 d-flex flex-column text-center justify-content-center"><i class="bx bx-purchase-tag-alt"></i> ${this.worksheetTag1} - ${this.worksheetTag2}</span>
+                <span id="study_label" class="text2 col-4 pt-2 pt-lg-0 order-1 order-lg-1 d-flex flex-column text-center justify-content-center"><i class="bx bx-id-card"></i> ${this.worksheetName}</span>
+                <span id="progress_label" class="text2 col-4 pt-2 pt-lg-0 order-1 order-lg-1 d-flex flex-column text-center justify-content-center"><i class="bx bx-trending-up"></i> ${this.countAnsweredQuestion} of ${this.totalQuestionCount} is completed</span>
+                <span id="tags_label" class="text2 col-4 pt-2 pt-lg-0 order-1 order-lg-1 d-flex flex-column text-center justify-content-center"><i class="bx bx-purchase-tag-alt"></i> ${this.worksheetTag1} - ${this.worksheetTag2}</span>
                 </div>
               </div>`;
     },
@@ -55,7 +55,7 @@ const UIDisplayProgressBar = {
   
     get progressBar() {
       return `<div>
-                <div class="progress mb-5" style="max-width: 100%">
+                <div class="progress mb-2" style="max-width: 100%">
                   <div id="correct-answer" class="progress-bar bg-success progress-bar-stripped" style="width: ${this.percentageCorrectAnswer}%">${this.percentageCorrectAnswer}% (${this.countCorrectAnswer})</div>
                   <div id="wrong-answer" class="progress-bar bg-danger progress-bar-stripped" style="width: ${this.percentageWrongAnswer}%">${this.percentageWrongAnswer}% (${this.countWrongAnswer})</div>
                 </div>
@@ -158,12 +158,11 @@ const UIDisplayQuestionCard = {
 
                   </div>
                   <img id="${this.questionFileName}" class="${this.HTMLImageClassQuestionCard}" src="${this.questionImageUrl}">
-                  <a id="check-answer${this.questionIndex}" style="${this.HTMLButtonStyleCheckQuestionAnswer}" class="btn btn-warning btn-sm bx bx-right-arrow-circle" data-toggle="tooltip" data-placement="top" title="" correct-answer="${this.questionCorrectAnswer}" data-original-title="Check the Answer"></a>
-                  <a class="url btn btn-warning btn-sm bx bx-news" id="" data-toggle="tooltip" data-placement="top" title="" href="${this.questionArticleUrl}" target="_blank" data-original-title="Read the News Article"></a>
+                  <a id="check-answer${this.questionIndex}" style="${this.HTMLButtonStyleCheckQuestionAnswer}" class="btn btn-warning btn-sm bx bx-right-arrow-circle" data-toggle="tooltip" data-placement="top" title="Check your answer" correct-answer="${this.questionCorrectAnswer}"></a>
+                  <a class="url btn btn-warning btn-sm bx bx-news" id="" href="${this.questionArticleUrl}" target="_blank" data-toggle="tooltip" data-placement="top" title="Read this news article"></a>
                   <img class="correct-img" style="${this.HTMLImageStyleTick}" src="assets/img/correct.png">
                   <img class="wrong-img" style="${this.HTMLImageStyleCross}" src="assets/img/wrong.png">
                   <button id="user-answer" style="${this.HTMLButtonStyleUserAnswer}" class="user-answer btn btn-secondary btn-sm" style="" disabled>?</button>
-
                 </div>
               </div>`;
     },
@@ -192,6 +191,8 @@ const UIDisplayQuestionCard = {
       document.getElementById("button-C" + this.questionIndex.toString()).addEventListener('click', this.buttonCOptionFunc);
       document.getElementById("button-D" + this.questionIndex.toString()).addEventListener('click', this.buttonDOptionFunc);
       document.getElementById("check-answer" + this.questionIndex.toString()).addEventListener('click', this.buttonCheckAnswerFunc);
+
+      $(function () {$('[data-toggle="tooltip"]').tooltip()})
     },
   
 }
@@ -222,7 +223,7 @@ const UIDisplayQuestionWSCreationCard = {
     return `<div class="card">
               <div class="card-img-top">
                 <img id="${this.questionFileName}" class="${this.HTMLImageClassQuestionCard}" src="${this.questionImageUrl}">
-                <a class="url btn btn-warning btn-sm bx bx-book-add" id="add-question${this.questionIndex}" correct-answer="${this.questionCorrectAnswer}" article-url="${this.questionArticleUrl}" data-toggle="tooltip" data-placement="top" title="Add This Question Into Your Worksheet" target="_blank" data-original-title=""></a>
+                <a class="url btn btn-warning btn-sm bx bx-book-add" id="add-question${this.questionIndex}" correct-answer="${this.questionCorrectAnswer}" article-url="${this.questionArticleUrl}" data-toggle="tooltip" data-placement="top" title="Add this question into your worksheet" target="_blank"></a>
               </div>
             </div>`;
   },
@@ -240,7 +241,10 @@ const UIDisplayQuestionWSCreationCard = {
   insertCard() {
     cardContainerHTML = document.getElementById(this.HTMLContainerIDQuestionCardsTopLevel);
     cardContainerHTML.insertAdjacentHTML("beforeend", this.card);
+
     document.getElementById("add-question" + this.questionIndex.toString()).addEventListener('click', this.buttonAddQuestionToWorksheet);
+
+    $(function () {$('[data-toggle="tooltip"]').tooltip()})
   },
 
 }
@@ -270,7 +274,7 @@ const UIDisplayQuestionWSSaveCard = {
     return `<div class="card">
               <div class="card-img-top">
                 <img id="${this.questionFileName}" class="${this.HTMLImageClassQuestionCard}" src="${this.questionImageUrl}">
-                <a class="url btn btn-warning btn-sm bx bxs-eraser" id="remove-question${this.questionIndex}" correct-answer="${this.questionCorrectAnswer}" article-url="${this.questionArticleUrl}" data-toggle="tooltip" data-placement="top" title="Remove This Question From Your Worksheet" target="_blank" data-original-title=""></a>
+                <a class="url btn btn-warning btn-sm bx bxs-eraser" id="remove-question${this.questionIndex}" correct-answer="${this.questionCorrectAnswer}" article-url="${this.questionArticleUrl}" data-toggle="tooltip" data-placement="top" title="Remove question from worksheet" target="_blank" data-original-title=""></a>
               </div>
             </div>`;
   },
@@ -289,6 +293,7 @@ const UIDisplayQuestionWSSaveCard = {
     cardContainerHTML = document.getElementById(this.HTMLContainerIDQuestionCardsTopLevel);
     cardContainerHTML.insertAdjacentHTML("beforeend", this.card);
     document.getElementById("remove-question" + this.questionIndex.toString()).addEventListener('click', this.buttonRemoveQuestionFromWorksheet);
+    $(function () {$('[data-toggle="tooltip"]').tooltip()})
   },
 
 }

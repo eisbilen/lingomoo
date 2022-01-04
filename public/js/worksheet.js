@@ -1,4 +1,3 @@
-
 ///////////// Define Global Const ///////////////
 let userAnswerGLOBAL = 0;
 let totalQuestionCount = 0;
@@ -40,17 +39,12 @@ getTotalCount("/questions_cat/VERB", "").then((result) => {
     UIDisplayPagination.insertPagination();
     UIDisplayPagination.updatePaginationButtons();
 
-    
-
 })
 
 dbref = firebase.database().ref("/questions/VERB").orderByKey();
 changeCreateListElements(dbref, "VERB")
 ////////////////////////////////////////////////
 
-$(function () {
-   $('[data-toggle="tooltip"]').tooltip()
-})
 
 $(document).ready(function () {
 
